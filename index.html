@@ -5,167 +5,71 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>Still 3AM</title>
 <style>
-  :root{
-    --ink: #d8c9a8;
-    --ink-dim: #8a7d63;
-    --paper: #1a1712;
-    --glow: #ffb46b;
-  }
-  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-  html,body { width:100%; height:100%; overflow:hidden; background:#000; font-family: "Courier New", monospace; color:var(--ink); }
-  #app { position:fixed; inset:0; }
-  canvas { display:block; }
+  :root{ --ink:#d8c9a8; --ink-dim:#8a7d63; --glow:#ffb46b; }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Courier New",monospace;color:var(--ink);}
+  #app{position:fixed;inset:0;}
+  canvas{display:block;}
 
-  /* ---------- START SCREEN ---------- */
-  #start {
-    position:fixed; inset:0; z-index:50; display:flex; flex-direction:column;
-    align-items:center; justify-content:center; text-align:center;
-    background: radial-gradient(circle at 50% 40%, #14110c 0%, #060504 70%, #000 100%);
-    transition: opacity 1.2s ease;
-  }
-  #start h1 {
-    font-size: clamp(28px, 6vw, 64px); letter-spacing: 0.4em; font-weight: 400;
-    color: #e8dcc0; text-shadow: 0 0 20px rgba(255,180,107,.35), 0 0 60px rgba(255,180,107,.15);
-    margin-bottom: 8px;
-  }
-  #start .sub { font-size: clamp(11px,1.6vw,14px); letter-spacing:.3em; color:#7a6d57; margin-bottom:40px;}
-  #start .brief { max-width: 520px; font-size: 13px; line-height:1.9; color:#a89778; padding:0 24px; margin-bottom:32px; }
-  #start button {
-    background: transparent; border:1px solid #5a4f3c; color:#d8c9a8; font-family:inherit;
-    padding: 14px 44px; letter-spacing:.25em; font-size:13px; cursor:pointer;
-    transition: all .3s; border-radius:2px;
-  }
-  #start button:hover { border-color:var(--glow); color:#fff; box-shadow:0 0 24px rgba(255,180,107,.25); }
-  .hint { margin-top: 26px; font-size:10px; letter-spacing:.2em; color:#4e4536; line-height:2; }
+  #start{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:radial-gradient(circle at 50% 40%,#14110c 0%,#060504 70%,#000 100%);transition:opacity 1.2s ease;}
+  #start h1{font-size:clamp(28px,6vw,64px);letter-spacing:.4em;font-weight:400;color:#e8dcc0;text-shadow:0 0 20px rgba(255,180,107,.35),0 0 60px rgba(255,180,107,.15);margin-bottom:8px;}
+  #start .sub{font-size:clamp(11px,1.6vw,14px);letter-spacing:.3em;color:#7a6d57;margin-bottom:40px;}
+  #start .brief{max-width:520px;font-size:13px;line-height:1.9;color:#a89778;padding:0 24px;margin-bottom:32px;}
+  #start button{background:transparent;border:1px solid #5a4f3c;color:#d8c9a8;font-family:inherit;padding:14px 44px;letter-spacing:.25em;font-size:13px;cursor:pointer;transition:all .3s;border-radius:2px;}
+  #start button:hover{border-color:var(--glow);color:#fff;box-shadow:0 0 24px rgba(255,180,107,.25);}
+  .hint{margin-top:26px;font-size:10px;letter-spacing:.2em;color:#4e4536;line-height:2;}
 
-  /* ---------- HUD ---------- */
-  #hud { position:fixed; inset:0; pointer-events:none; z-index:10; }
-  #crosshair {
-    position:absolute; left:50%; top:50%; width:6px; height:6px; margin:-3px 0 0 -3px;
-    border-radius:50%; background:rgba(216,201,168,.55); box-shadow:0 0 6px rgba(255,180,107,.4);
-    transition: transform .2s, background .2s;
-  }
-  #prompt {
-    position:absolute; left:50%; top:58%; transform:translateX(-50%);
-    font-size:12px; letter-spacing:.2em; color:#e8dcc0;
-    background:rgba(10,8,6,.55); padding:6px 14px; border:1px solid rgba(120,105,80,.35);
-    opacity:0; transition:opacity .25s;
-  }
-  #prompt.show { opacity:1; }
-  #toast {
-    position:absolute; left:50%; bottom:12%; transform:translateX(-50%);
-    font-size:12px; letter-spacing:.15em; color:#e8dcc0; text-align:center;
-    background:rgba(10,8,6,.6); padding:8px 18px; border-left:2px solid var(--glow);
-    opacity:0; transition:opacity .4s; max-width:80vw; line-height:1.6;
-  }
-  #toast.show { opacity:1; }
+  #hud{position:fixed;inset:0;pointer-events:none;z-index:10;}
+  #crosshair{position:absolute;left:50%;top:50%;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;background:rgba(216,201,168,.55);box-shadow:0 0 6px rgba(255,180,107,.4);transition:transform .2s,background .2s;}
+  #prompt{position:absolute;left:50%;top:58%;transform:translateX(-50%);font-size:12px;letter-spacing:.2em;color:#e8dcc0;background:rgba(10,8,6,.55);padding:6px 14px;border:1px solid rgba(120,105,80,.35);opacity:0;transition:opacity .25s;}
+  #prompt.show{opacity:1;}
+  #toast{position:absolute;left:50%;bottom:12%;transform:translateX(-50%);font-size:12px;letter-spacing:.15em;color:#e8dcc0;text-align:center;background:rgba(10,8,6,.6);padding:8px 18px;border-left:2px solid var(--glow);opacity:0;transition:opacity .4s;max-width:80vw;line-height:1.6;}
+  #toast.show{opacity:1;}
+  #clockHud{position:absolute;right:22px;top:18px;font-size:13px;letter-spacing:.3em;color:#a89778;text-shadow:0 0 10px rgba(255,180,107,.3);}
 
-  #clockHud {
-    position:absolute; right:22px; top:18px; font-size:13px; letter-spacing:.3em;
-    color:#a89778; text-shadow:0 0 10px rgba(255,180,107,.3);
-  }
+  #journal{position:fixed;inset:0;z-index:40;display:none;background:rgba(6,5,3,.92);backdrop-filter:blur(4px);padding:5vh 6vw;overflow-y:auto;}
+  #journal.open{display:block;}
+  #journal .page{max-width:760px;margin:0 auto;background:repeating-linear-gradient(0deg,rgba(255,240,200,.02) 0 1px,transparent 1px 26px),linear-gradient(#15120c,#0e0c08);border:1px solid rgba(120,105,80,.3);padding:40px 44px;color:#c9b992;box-shadow:0 0 60px rgba(0,0,0,.8);}
+  #journal h2{font-size:15px;letter-spacing:.35em;color:#e8dcc0;font-weight:400;margin-bottom:6px;}
+  #journal .divider{height:1px;background:linear-gradient(90deg,transparent,#5a4f3c,transparent);margin:14px 0 22px;}
+  #journal h3{font-size:11px;letter-spacing:.3em;color:#8a7d63;margin:26px 0 10px;}
+  #journal .entry{font-size:13px;line-height:1.9;margin-bottom:8px;padding-left:14px;border-left:1px solid #3a3226;color:#b9a884;}
+  #journal .entry .ts{color:#6a5f4a;font-size:11px;margin-right:8px;}
+  #journal .empty{color:#5a4f3c;font-style:italic;font-size:12px;}
+  #journal .close-hint{margin-top:34px;text-align:center;font-size:11px;letter-spacing:.25em;color:#6a5f4a;}
+  .photoStrip{display:flex;flex-wrap:wrap;gap:14px;margin-top:6px;}
+  .postcard{width:200px;background:#0b0906;border:1px solid #3a3226;padding:8px;box-shadow:0 4px 20px rgba(0,0,0,.6);transition:transform .2s;}
+  .postcard:hover{transform:scale(1.03) rotate(-1deg);}
+  .postcard img{width:100%;display:block;filter:sepia(.35) contrast(1.05) brightness(.9);}
+  .postcard .cap{font-size:10px;color:#8a7d63;margin-top:6px;letter-spacing:.08em;line-height:1.5;font-style:italic;}
 
-  /* ---------- JOURNAL ---------- */
-  #journal {
-    position:fixed; inset:0; z-index:40; display:none;
-    background: rgba(6,5,3,.92); backdrop-filter: blur(4px);
-    padding: 5vh 6vw; overflow-y:auto;
-  }
-  #journal.open { display:block; }
-  #journal .page {
-    max-width: 760px; margin:0 auto; background:
-      repeating-linear-gradient(0deg, rgba(255,240,200,.02) 0 1px, transparent 1px 26px),
-      linear-gradient(#15120c, #0e0c08);
-    border:1px solid rgba(120,105,80,.3); padding: 40px 44px; color:#c9b992;
-    box-shadow: 0 0 60px rgba(0,0,0,.8);
-  }
-  #journal h2 { font-size:15px; letter-spacing:.35em; color:#e8dcc0; font-weight:400; margin-bottom:6px; }
-  #journal .divider { height:1px; background:linear-gradient(90deg,transparent,#5a4f3c,transparent); margin:14px 0 22px; }
-  #journal h3 { font-size:11px; letter-spacing:.3em; color:#8a7d63; margin:26px 0 10px; }
-  #journal .entry { font-size:13px; line-height:1.9; margin-bottom:8px; padding-left:14px; border-left:1px solid #3a3226; color:#b9a884; }
-  #journal .entry .ts { color:#6a5f4a; font-size:11px; margin-right:8px; }
-  #journal .empty { color:#5a4f3c; font-style:italic; font-size:12px; }
-  #journal .close-hint { margin-top:34px; text-align:center; font-size:11px; letter-spacing:.25em; color:#6a5f4a; }
-  .photoStrip { display:flex; flex-wrap:wrap; gap:14px; margin-top:6px; }
-  .postcard {
-    width: 200px; background:#0b0906; border:1px solid #3a3226; padding:8px;
-    box-shadow:0 4px 20px rgba(0,0,0,.6); transition:transform .2s;
-  }
-  .postcard:hover { transform: scale(1.03) rotate(-1deg); }
-  .postcard img { width:100%; display:block; filter: sepia(.35) contrast(1.05) brightness(.9); }
-  .postcard .cap { font-size:10px; color:#8a7d63; margin-top:6px; letter-spacing:.08em; line-height:1.5; font-style:italic; }
+  #menu{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;background:rgba(4,3,2,.94);backdrop-filter:blur(6px);}
+  #menu.open{display:flex;}
+  #menu .panel{text-align:center;max-width:420px;padding:0 24px;}
+  #menu h2{font-size:18px;letter-spacing:.4em;font-weight:400;color:#e8dcc0;margin-bottom:34px;}
+  #menu button{display:block;width:100%;margin:10px 0;background:transparent;border:1px solid #4a4030;color:#c9b992;font-family:inherit;padding:13px;letter-spacing:.2em;font-size:12px;cursor:pointer;transition:all .25s;}
+  #menu button:hover{border-color:var(--glow);color:#fff;background:rgba(255,180,107,.05);}
+  #menu .setting{display:flex;justify-content:space-between;align-items:center;margin:14px 0;font-size:11px;letter-spacing:.15em;color:#8a7d63;}
+  #menu .setting .opts{display:flex;gap:6px;}
+  #menu .setting .opts span{padding:5px 12px;border:1px solid #3a3226;cursor:pointer;font-size:10px;color:#8a7d63;transition:all .2s;}
+  #menu .setting .opts span.on{border-color:var(--glow);color:#e8dcc0;background:rgba(255,180,107,.08);}
 
-  /* ---------- MENU ---------- */
-  #menu {
-    position:fixed; inset:0; z-index:60; display:none; align-items:center; justify-content:center;
-    background: rgba(4,3,2,.94); backdrop-filter: blur(6px);
-  }
-  #menu.open { display:flex; }
-  #menu .panel { text-align:center; max-width:420px; padding:0 24px; }
-  #menu h2 { font-size:18px; letter-spacing:.4em; font-weight:400; color:#e8dcc0; margin-bottom:34px;}
-  #menu button {
-    display:block; width:100%; margin:10px 0; background:transparent; border:1px solid #4a4030;
-    color:#c9b992; font-family:inherit; padding:13px; letter-spacing:.2em; font-size:12px; cursor:pointer;
-    transition:all .25s;
-  }
-  #menu button:hover { border-color:var(--glow); color:#fff; background:rgba(255,180,107,.05);}
-  #menu .setting { display:flex; justify-content:space-between; align-items:center; margin:14px 0;
-    font-size:11px; letter-spacing:.15em; color:#8a7d63; }
-  #menu .setting .opts { display:flex; gap:6px; }
-  #menu .setting .opts span {
-    padding:5px 12px; border:1px solid #3a3226; cursor:pointer; font-size:10px; color:#8a7d63;
-    transition:all .2s;
-  }
-  #menu .setting .opts span.on { border-color:var(--glow); color:#e8dcc0; background:rgba(255,180,107,.08);}
+  #ending{position:fixed;inset:0;z-index:70;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:radial-gradient(circle at 50% 45%,#17130d 0%,#050403 80%);opacity:0;transition:opacity 2s ease;}
+  #ending.show{display:flex;opacity:1;}
+  #ending .line{font-size:clamp(16px,3vw,26px);letter-spacing:.3em;color:#e8dcc0;margin:10px 0;text-shadow:0 0 24px rgba(255,180,107,.25);}
+  #ending .small{font-size:11px;letter-spacing:.25em;color:#6a5f4a;margin-top:40px;}
+  #flash{position:fixed;inset:0;background:#fff;opacity:0;z-index:35;pointer-events:none;transition:opacity .12s;}
 
-  /* ---------- ENDING ---------- */
-  #ending {
-    position:fixed; inset:0; z-index:70; display:none; flex-direction:column;
-    align-items:center; justify-content:center; text-align:center;
-    background: radial-gradient(circle at 50% 45%, #17130d 0%, #050403 80%);
-    opacity:0; transition:opacity 2s ease;
-  }
-  #ending.show { display:flex; opacity:1; }
-  #ending .line { font-size:clamp(16px,3vw,26px); letter-spacing:.3em; color:#e8dcc0; margin:10px 0;
-    text-shadow:0 0 24px rgba(255,180,107,.25);}
-  #ending .small { font-size:11px; letter-spacing:.25em; color:#6a5f4a; margin-top:40px;}
+  #touch{position:fixed;inset:0;z-index:15;display:none;pointer-events:none;}
+  #touch .stick{position:absolute;width:110px;height:110px;border-radius:50%;border:1px solid rgba(216,201,168,.3);background:rgba(20,16,10,.35);pointer-events:auto;}
+  #touch .stick .knob{position:absolute;width:46px;height:46px;border-radius:50%;left:32px;top:32px;background:rgba(216,201,168,.35);border:1px solid rgba(255,180,107,.5);}
+  #stickMove{left:22px;bottom:30px;} #stickLook{right:22px;bottom:30px;}
+  #touch .btn{position:absolute;width:58px;height:58px;border-radius:50%;pointer-events:auto;border:1px solid rgba(216,201,168,.35);background:rgba(20,16,10,.45);display:flex;align-items:center;justify-content:center;font-size:11px;letter-spacing:.05em;color:#d8c9a8;}
+  #btnE{right:150px;bottom:36px;} #btnC{right:36px;bottom:150px;} #btnJ{right:150px;bottom:150px;} #btnM{right:36px;bottom:36px;}
+  @media (pointer:coarse){ #touch{display:block;} }
 
-  /* ---------- FLASH ---------- */
-  #flash { position:fixed; inset:0; background:#fff; opacity:0; z-index:35; pointer-events:none; transition:opacity .12s; }
-
-  /* mobile controls */
-  #touch { position:fixed; inset:0; z-index:15; display:none; pointer-events:none; }
-  #touch .stick {
-    position:absolute; width:110px; height:110px; border-radius:50%;
-    border:1px solid rgba(216,201,168,.3); background:rgba(20,16,10,.35);
-    pointer-events:auto;
-  }
-  #touch .stick .knob {
-    position:absolute; width:46px; height:46px; border-radius:50%; left:32px; top:32px;
-    background:rgba(216,201,168,.35); border:1px solid rgba(255,180,107,.5);
-  }
-  #stickMove { left:22px; bottom:30px; }
-  #stickLook { right:22px; bottom:30px; }
-  #touch .btn {
-    position:absolute; width:58px; height:58px; border-radius:50%; pointer-events:auto;
-    border:1px solid rgba(216,201,168,.35); background:rgba(20,16,10,.45);
-    display:flex; align-items:center; justify-content:center; font-size:11px; letter-spacing:.05em; color:#d8c9a8;
-  }
-  #btnE { right:150px; bottom:36px; }
-  #btnC { right:36px; bottom:150px; }
-  #btnJ { right:150px; bottom:150px; }
-  #btnM { right:36px; bottom:36px; }
-
-  @media (pointer:coarse){ #touch { display:block; } }
-
-  /* vignette overlay */
-  #vignette { position:fixed; inset:0; pointer-events:none; z-index:8;
-    background: radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,.55) 100%); }
-
-  /* rain streaks overlay */
-  #grain { position:fixed; inset:0; pointer-events:none; z-index:9; opacity:.07;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
+  #vignette{position:fixed;inset:0;pointer-events:none;z-index:8;background:radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.55) 100%);}
+  #grain{position:fixed;inset:0;pointer-events:none;z-index:9;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
 </style>
 </head>
 <body>
@@ -173,23 +77,14 @@
 <div id="vignette"></div>
 <div id="grain"></div>
 
-<!-- START -->
 <div id="start">
   <h1>STILL 3AM</h1>
   <div class="sub">A PSYCHOLOGICAL AMBIENT HORROR</div>
-  <div class="brief">
-    It is 3:00 AM. It has been 3:00 AM for a while.<br/>
-    The rain won't stop. Your door is somewhere in the hall.<br/>
-    Find the truth. Find the door. <em>You woke up once. You can wake up again.</em>
-  </div>
+  <div class="brief">It is 3:00 AM. It has been 3:00 AM for a while.<br/>The rain won't stop. Your door is somewhere in the hall.<br/>Find the truth. Find the door. <em>You woke up once. You can wake up again.</em></div>
   <button id="btnStart">BEGIN</button>
-  <div class="hint">
-    WASD · MOUSE DRAG TO LOOK · E INTERACT · C SNAPSHOT · J JOURNAL · M MUTE · ESC MENU<br/>
-    HEADPHONES RECOMMENDED · SOUND BEGINS ON INPUT
-  </div>
+  <div class="hint">WASD · MOUSE DRAG TO LOOK · E INTERACT · C SNAPSHOT · J JOURNAL · M MUTE · ESC MENU<br/>HEADPHONES RECOMMENDED · SOUND BEGINS ON INPUT</div>
 </div>
 
-<!-- HUD -->
 <div id="hud" style="display:none;">
   <div id="crosshair"></div>
   <div id="prompt"></div>
@@ -197,7 +92,6 @@
   <div id="clockHud">3:00</div>
 </div>
 
-<!-- JOURNAL -->
 <div id="journal">
   <div class="page">
     <h2>MY NOTEBOOK</h2>
@@ -212,41 +106,24 @@
   </div>
 </div>
 
-<!-- MENU -->
 <div id="menu">
   <div class="panel">
     <h2>PAUSED</h2>
-    <div class="setting">
-      <div>AMBIENCE INTENSITY</div>
-      <div class="opts" id="optAmb">
-        <span data-v="0">LOW</span>
-        <span data-v="1" class="on">MED</span>
-        <span data-v="2">FULL</span>
-      </div>
-    </div>
-    <div class="setting">
-      <div>SCARE CALIBRATION</div>
-      <div class="opts" id="optScare">
-        <span data-v="0" class="on">ATMOSPHERIC</span>
-        <span data-v="1">TENSE</span>
-      </div>
-    </div>
+    <div class="setting"><div>AMBIENCE INTENSITY</div><div class="opts" id="optAmb"><span data-v="0">LOW</span><span data-v="1" class="on">MED</span><span data-v="2">FULL</span></div></div>
+    <div class="setting"><div>SCARE CALIBRATION</div><div class="opts" id="optScare"><span data-v="0" class="on">ATMOSPHERIC</span><span data-v="1">TENSE</span></div></div>
     <button id="btnMute">TOGGLE MUTE</button>
     <button id="btnResume">RESUME</button>
   </div>
 </div>
 
-<!-- ENDING -->
 <div id="ending">
   <div class="line">YOU WOKE UP.</div>
   <div class="line small">3:01</div>
   <div class="small">PRESS R TO REMAIN</div>
 </div>
 
-<!-- FLASH -->
 <div id="flash"></div>
 
-<!-- TOUCH -->
 <div id="touch">
   <div class="stick" id="stickMove"><div class="knob" id="knobMove"></div></div>
   <div class="stick" id="stickLook"><div class="knob" id="knobLook"></div></div>
@@ -269,45 +146,25 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 
 /* =====================================================================
    STILL 3AM — single-file psychological ambient horror
+   GRAPHICS OVERHAUL v2
    ===================================================================== */
 
 const state = {
-  running:false,
-  loop:1,
-  time:0,
-  clockHud:"3:00",
-  muted:false,
-  ambIntensity:1,
-  scareTense:false,
-  observations:[],
-  ambienceLog:[],
-  photos:[],
-  fragments:0,
-  truth:false,
-  foundTrueDoor:false,
+  running:false, loop:1, time:0, clockHud:"3:00", muted:false,
+  ambIntensity:1, scareTense:false,
+  observations:[], ambienceLog:[], photos:[],
+  fragments:0, truth:false, foundTrueDoor:false,
   playerPos:new THREE.Vector3(0,1.6,6),
-  yaw:0, pitch:0,
-  velocity:new THREE.Vector3(),
-  paused:false,
-  journalOpen:false,
-  ending:false,
-  flagged:{},
-  lastFootstep:0,
-  footstepDelay:0,
-  rainInWalls:false,
-  rainInside:false,
-  silenceTimer:0,
-  silenceActive:false,
-  radioOn:false,
-  roomName:"5B",
+  yaw:0, pitch:0, paused:false, journalOpen:false, ending:false,
+  flagged:{}, lastFootstep:0, footstepDelay:0,
+  rainInWalls:false, rainInside:false,
+  silenceTimer:8, silenceActive:false,
+  radioOn:false, roomName:"5B",
 };
 
 /* ============================ AUDIO ENGINE ============================ */
 class Ambience {
-  constructor(){
-    this.ctx=null; this.master=null; this.muted=false; this.level=1;
-    this.nodes={}; this.started=false;
-  }
+  constructor(){ this.ctx=null; this.master=null; this.muted=false; this.level=1; this.nodes={}; this.started=false; }
   init(){
     if(this.started) return;
     const AC = window.AudioContext||window.webkitAudioContext;
@@ -321,224 +178,65 @@ class Ambience {
   }
   setMuted(m){ this.muted=m; if(this.master) this.master.gain.linearRampToValueAtTime(m?0:0.55, this.ctx.currentTime+0.4); }
   setLevel(v){ this.level=v; this.applyLevel(); }
-  applyLevel(){
-    if(!this.started) return;
-    const m = {0:0.3,1:0.55,2:0.8}[this.level]||0.55;
-    if(!this.muted) this.master.gain.linearRampToValueAtTime(m, this.ctx.currentTime+0.6);
-  }
-
-  // ---- procedural noise buffer ----
+  applyLevel(){ if(!this.started) return; const m={0:0.3,1:0.55,2:0.8}[this.level]||0.55; if(!this.muted) this.master.gain.linearRampToValueAtTime(m,this.ctx.currentTime+0.6); }
   noiseBuffer(seconds=4, brown=false){
-    const len = this.ctx.sampleRate*seconds;
-    const buf = this.ctx.createBuffer(1, len, this.ctx.sampleRate);
-    const d = buf.getChannelData(0);
-    let last=0;
-    for(let i=0;i<len;i++){
-      const white = Math.random()*2-1;
-      if(brown){ last = (last + 0.02*white)/1.02; d[i]=last*3.5; }
-      else d[i]=white;
-    }
+    const len=this.ctx.sampleRate*seconds; const buf=this.ctx.createBuffer(1,len,this.ctx.sampleRate); const d=buf.getChannelData(0); let last=0;
+    for(let i=0;i<len;i++){ const w=Math.random()*2-1; if(brown){ last=(last+0.02*w)/1.02; d[i]=last*3.5; } else d[i]=w; }
     return buf;
   }
-
   build(){
-    const ctx = this.ctx;
-    // RAIN — brown noise through bandpass + slow gain LFO
-    const rainSrc = ctx.createBufferSource();
-    rainSrc.buffer = this.noiseBuffer(6,true); rainSrc.loop=true;
-    const rainBP = ctx.createBiquadFilter(); rainBP.type='bandpass'; rainBP.frequency.value=1400; rainBP.Q.value=0.7;
-    const rainHP = ctx.createBiquadFilter(); rainHP.type='highpass'; rainHP.frequency.value=300;
-    const rainGain = ctx.createGain(); rainGain.gain.value=0.5;
-    rainSrc.connect(rainBP).connect(rainHP).connect(rainGain).connect(this.master);
-    rainSrc.start();
-    this.nodes.rain = rainGain;
-    this.nodes.rainBP = rainBP;
-
-    // rain droplet ticks
-    this.nodes.dropletGain = ctx.createGain(); this.nodes.dropletGain.gain.value=0.15;
-    this.nodes.dropletGain.connect(this.master);
-
-    // WIND — low filtered noise
-    const windSrc = ctx.createBufferSource(); windSrc.buffer=this.noiseBuffer(8,true); windSrc.loop=true;
-    const windLP = ctx.createBiquadFilter(); windLP.type='lowpass'; windLP.frequency.value=350;
-    const windGain = ctx.createGain(); windGain.gain.value=0.18;
-    windSrc.connect(windLP).connect(windGain).connect(this.master); windSrc.start();
-    this.nodes.wind = windGain;
-
-    // SUB DRONE — stacked detuned sine
-    const droneGain = ctx.createGain(); droneGain.gain.value=0.0; droneGain.connect(this.master);
-    [40, 60, 89.5].forEach((f,i)=>{
-      const o = ctx.createOscillator(); o.type='sine'; o.frequency.value=f;
-      const g = ctx.createGain(); g.gain.value = 0.06/(i+1);
-      const lfo = ctx.createOscillator(); lfo.frequency.value = 0.07+i*0.03;
-      const lg = ctx.createGain(); lg.gain.value=0.02;
-      lfo.connect(lg).connect(g.gain); lfo.start();
-      o.connect(g).connect(droneGain); o.start();
-    });
-    this.nodes.drone = droneGain;
-
-    // TAPE HISS
-    const hissSrc = ctx.createBufferSource(); hissSrc.buffer=this.noiseBuffer(4,false); hissSrc.loop=true;
-    const hissHP = ctx.createBiquadFilter(); hissHP.type='highpass'; hissHP.frequency.value=5000;
-    const hissGain = ctx.createGain(); hissGain.gain.value=0.0;
-    hissSrc.connect(hissHP).connect(hissGain).connect(this.master); hissSrc.start();
-    this.nodes.hiss = hissGain;
-
-    // CLOCK TICK — scheduled
-    this.clockTimer = setInterval(()=>this.tick(), 1000);
-
-    // PIPE THUNKS — occasional
-    this.pipeTimer = setInterval(()=>{
-      if(Math.random()<0.18) this.thunk();
-    }, 4200);
-
-    // Droplet ticks
-    this.dropTimer = setInterval(()=>{
-      if(Math.random()<0.6) this.droplet();
-    }, 260);
-  }
-
-  tick(){
-    if(!this.ctx||this.muted) return;
-    const t = this.ctx.currentTime;
-    const o = this.ctx.createOscillator(); o.type='square'; o.frequency.value=1800;
-    const g = this.ctx.createGain(); g.gain.setValueAtTime(0.0,t);
-    g.gain.linearRampToValueAtTime(0.06,t+0.005);
-    g.gain.exponentialRampToValueAtTime(0.0001,t+0.05);
-    o.connect(g).connect(this.master); o.start(t); o.stop(t+0.06);
-    // subtle second click
-    setTimeout(()=>{
-      if(!this.muted){ this.tock(); }
-    }, 140);
-  }
-  tock(){
-    if(!this.ctx||this.muted) return;
-    const t=this.ctx.currentTime;
-    const o=this.ctx.createOscillator(); o.type='square'; o.frequency.value=900;
-    const g=this.ctx.createGain(); g.gain.setValueAtTime(0.0,t);
-    g.gain.linearRampToValueAtTime(0.03,t+0.004); g.gain.exponentialRampToValueAtTime(0.0001,t+0.04);
-    o.connect(g).connect(this.master); o.start(t); o.stop(t+0.05);
-  }
-  thunk(){
-    if(!this.ctx||this.muted) return;
-    const t=this.ctx.currentTime;
-    const o=this.ctx.createOscillator(); o.type='sine'; o.frequency.setValueAtTime(140,t);
-    o.frequency.exponentialRampToValueAtTime(50,t+0.3);
-    const g=this.ctx.createGain(); g.gain.setValueAtTime(0.0,t);
-    g.gain.linearRampToValueAtTime(0.18,t+0.01); g.gain.exponentialRampToValueAtTime(0.0001,t+0.4);
-    o.connect(g).connect(this.master); o.start(t); o.stop(t+0.42);
-  }
-  droplet(){
-    if(!this.ctx||this.muted) return;
-    const t=this.ctx.currentTime;
-    const src=this.ctx.createBufferSource(); src.buffer=this.noiseBuffer(0.15,false);
-    const bp=this.ctx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=2200+Math.random()*1500; bp.Q.value=6;
-    const g=this.ctx.createGain(); g.gain.setValueAtTime(0.0,t);
-    g.gain.linearRampToValueAtTime(0.08,t+0.005); g.gain.exponentialRampToValueAtTime(0.0001,t+0.09);
-    src.connect(bp).connect(g).connect(this.nodes.dropletGain); src.start(t); src.stop(t+0.1);
-  }
-
-  footstep(){
-    if(!this.ctx||this.muted) return;
-    const t=this.ctx.currentTime;
-    const src=this.ctx.createBufferSource(); src.buffer=this.noiseBuffer(0.12,false);
-    const lp=this.ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=600;
-    const g=this.ctx.createGain(); g.gain.setValueAtTime(0.0,t);
-    g.gain.linearRampToValueAtTime(0.15,t+0.008); g.gain.exponentialRampToValueAtTime(0.0001,t+0.14);
-    src.connect(lp).connect(g).connect(this.master); src.start(t); src.stop(t+0.15);
-    // delayed echo grows with loop
-    if(state.footstepDelay>0){
-      setTimeout(()=>{
-        if(!this.ctx||this.muted) return;
-        const t2=this.ctx.currentTime;
-        const s2=this.ctx.createBufferSource(); s2.buffer=this.noiseBuffer(0.12,false);
-        const l2=this.ctx.createBiquadFilter(); l2.type='lowpass'; l2.frequency.value=500;
-        const g2=this.ctx.createGain(); g2.gain.setValueAtTime(0.0,t2);
-        g2.gain.linearRampToValueAtTime(0.08,t2+0.008); g2.gain.exponentialRampToValueAtTime(0.0001,t2+0.14);
-        s2.connect(l2).connect(g2).connect(this.master); s2.start(t2); s2.stop(t2+0.15);
-      }, state.footstepDelay);
-    }
-  }
-
-  shutter(){
-    if(!this.ctx||this.muted) return;
-    const t=this.ctx.currentTime;
-    const src=this.ctx.createBufferSource(); src.buffer=this.noiseBuffer(0.08,false);
-    const hp=this.ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=1800;
-    const g=this.ctx.createGain(); g.gain.setValueAtTime(0.0,t);
-    g.gain.linearRampToValueAtTime(0.2,t+0.002); g.gain.exponentialRampToValueAtTime(0.0001,t+0.08);
-    src.connect(hp).connect(g).connect(this.master); src.start(t); src.stop(t+0.09);
-  }
-  uiClick(){
-    if(!this.ctx||this.muted) return;
-    const t=this.ctx.currentTime;
-    const o=this.ctx.createOscillator(); o.type='triangle'; o.frequency.value=520;
-    const g=this.ctx.createGain(); g.gain.setValueAtTime(0.0,t);
-    g.gain.linearRampToValueAtTime(0.05,t+0.004); g.gain.exponentialRampToValueAtTime(0.0001,t+0.09);
-    o.connect(g).connect(this.master); o.start(t); o.stop(t+0.1);
-  }
-  radioHum(){
-    if(!this.ctx) return;
     const ctx=this.ctx;
-    // stop existing radio if any
-    if(this.nodes.radio){ try{this.nodes.radio.disconnect();}catch(e){} }
-    const src=ctx.createBufferSource(); src.buffer=this.noiseBuffer(3,false); src.loop=true;
-    const bp=ctx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=800; bp.Q.value=1.2;
-    const g=ctx.createGain(); g.gain.value=0.0;
-    src.connect(bp).connect(g).connect(this.master); src.start();
-    g.gain.linearRampToValueAtTime(0.08, ctx.currentTime+0.6);
-    this.nodes.radio=g;
-    // warm melody fragment, occasionally
-    setTimeout(()=>{
-      if(!this.ctx) return;
-      const t=ctx.currentTime;
-      const notes=[392, 523.25, 466.16, 349.23];
-      notes.forEach((f,i)=>{
-        const o=ctx.createOscillator(); o.type='triangle'; o.frequency.value=f;
-        const og=ctx.createGain(); og.gain.setValueAtTime(0,t+i*0.5);
-        og.gain.linearRampToValueAtTime(0.02,t+i*0.5+0.05);
-        og.gain.exponentialRampToValueAtTime(0.0001,t+i*0.5+0.5);
-        o.connect(og).connect(this.nodes.radio); o.start(t+i*0.5); o.stop(t+i*0.5+0.55);
-      });
-    }, 1200);
+    const rainSrc=ctx.createBufferSource(); rainSrc.buffer=this.noiseBuffer(6,true); rainSrc.loop=true;
+    const rainBP=ctx.createBiquadFilter(); rainBP.type='bandpass'; rainBP.frequency.value=1400; rainBP.Q.value=0.7;
+    const rainHP=ctx.createBiquadFilter(); rainHP.type='highpass'; rainHP.frequency.value=300;
+    const rainGain=ctx.createGain(); rainGain.gain.value=0.5;
+    rainSrc.connect(rainBP).connect(rainHP).connect(rainGain).connect(this.master); rainSrc.start();
+    this.nodes.rain=rainGain; this.nodes.rainBP=rainBP;
+    this.nodes.dropletGain=ctx.createGain(); this.nodes.dropletGain.gain.value=0.15; this.nodes.dropletGain.connect(this.master);
+    const windSrc=ctx.createBufferSource(); windSrc.buffer=this.noiseBuffer(8,true); windSrc.loop=true;
+    const windLP=ctx.createBiquadFilter(); windLP.type='lowpass'; windLP.frequency.value=350;
+    const windGain=ctx.createGain(); windGain.gain.value=0.18;
+    windSrc.connect(windLP).connect(windGain).connect(this.master); windSrc.start(); this.nodes.wind=windGain;
+    const droneGain=ctx.createGain(); droneGain.gain.value=0.0; droneGain.connect(this.master);
+    [40,60,89.5].forEach((f,i)=>{
+      const o=ctx.createOscillator(); o.type='sine'; o.frequency.value=f;
+      const g=ctx.createGain(); g.gain.value=0.06/(i+1);
+      const lfo=ctx.createOscillator(); lfo.frequency.value=0.07+i*0.03;
+      const lg=ctx.createGain(); lg.gain.value=0.02;
+      lfo.connect(lg).connect(g.gain); lfo.start(); o.connect(g).connect(droneGain); o.start();
+    });
+    this.nodes.drone=droneGain;
+    const hissSrc=ctx.createBufferSource(); hissSrc.buffer=this.noiseBuffer(4,false); hissSrc.loop=true;
+    const hissHP=ctx.createBiquadFilter(); hissHP.type='highpass'; hissHP.frequency.value=5000;
+    const hissGain=ctx.createGain(); hissGain.gain.value=0.0;
+    hissSrc.connect(hissHP).connect(hissGain).connect(this.master); hissSrc.start(); this.nodes.hiss=hissGain;
+    this.clockTimer=setInterval(()=>this.tick(),1000);
+    this.pipeTimer=setInterval(()=>{ if(Math.random()<0.18) this.thunk(); },4200);
+    this.dropTimer=setInterval(()=>{ if(Math.random()<0.6) this.droplet(); },260);
   }
-  radioStop(){
-    if(this.nodes.radio){ this.nodes.radio.gain.linearRampToValueAtTime(0.0, this.ctx.currentTime+0.4); }
+  tick(){ if(!this.ctx||this.muted) return; const t=this.ctx.currentTime; const o=this.ctx.createOscillator(); o.type='square'; o.frequency.value=1800; const g=this.ctx.createGain(); g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(0.06,t+0.005); g.gain.exponentialRampToValueAtTime(0.0001,t+0.05); o.connect(g).connect(this.master); o.start(t); o.stop(t+0.06); setTimeout(()=>this.tock(),140); }
+  tock(){ if(!this.ctx||this.muted) return; const t=this.ctx.currentTime; const o=this.ctx.createOscillator(); o.type='square'; o.frequency.value=900; const g=this.ctx.createGain(); g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(0.03,t+0.004); g.gain.exponentialRampToValueAtTime(0.0001,t+0.04); o.connect(g).connect(this.master); o.start(t); o.stop(t+0.05); }
+  thunk(){ if(!this.ctx||this.muted) return; const t=this.ctx.currentTime; const o=this.ctx.createOscillator(); o.type='sine'; o.frequency.setValueAtTime(140,t); o.frequency.exponentialRampToValueAtTime(50,t+0.3); const g=this.ctx.createGain(); g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(0.18,t+0.01); g.gain.exponentialRampToValueAtTime(0.0001,t+0.4); o.connect(g).connect(this.master); o.start(t); o.stop(t+0.42); }
+  droplet(){ if(!this.ctx||this.muted) return; const t=this.ctx.currentTime; const src=this.ctx.createBufferSource(); src.buffer=this.noiseBuffer(0.15,false); const bp=this.ctx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=2200+Math.random()*1500; bp.Q.value=6; const g=this.ctx.createGain(); g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(0.08,t+0.005); g.gain.exponentialRampToValueAtTime(0.0001,t+0.09); src.connect(bp).connect(g).connect(this.nodes.dropletGain); src.start(t); src.stop(t+0.1); }
+  footstep(){ if(!this.ctx||this.muted) return; const t=this.ctx.currentTime; const src=this.ctx.createBufferSource(); src.buffer=this.noiseBuffer(0.12,false); const lp=this.ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=600; const g=this.ctx.createGain(); g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(0.15,t+0.008); g.gain.exponentialRampToValueAtTime(0.0001,t+0.14); src.connect(lp).connect(g).connect(this.master); src.start(t); src.stop(t+0.15);
+    if(state.footstepDelay>0){ setTimeout(()=>{ if(!this.ctx||this.muted) return; const t2=this.ctx.currentTime; const s2=this.ctx.createBufferSource(); s2.buffer=this.noiseBuffer(0.12,false); const l2=this.ctx.createBiquadFilter(); l2.type='lowpass'; l2.frequency.value=500; const g2=this.ctx.createGain(); g2.gain.setValueAtTime(0,t2); g2.gain.linearRampToValueAtTime(0.08,t2+0.008); g2.gain.exponentialRampToValueAtTime(0.0001,t2+0.14); s2.connect(l2).connect(g2).connect(this.master); s2.start(t2); s2.stop(t2+0.15); }, state.footstepDelay); } }
+  shutter(){ if(!this.ctx||this.muted) return; const t=this.ctx.currentTime; const src=this.ctx.createBufferSource(); src.buffer=this.noiseBuffer(0.08,false); const hp=this.ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=1800; const g=this.ctx.createGain(); g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(0.2,t+0.002); g.gain.exponentialRampToValueAtTime(0.0001,t+0.08); src.connect(hp).connect(g).connect(this.master); src.start(t); src.stop(t+0.09); }
+  uiClick(){ if(!this.ctx||this.muted) return; const t=this.ctx.currentTime; const o=this.ctx.createOscillator(); o.type='triangle'; o.frequency.value=520; const g=this.ctx.createGain(); g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(0.05,t+0.004); g.gain.exponentialRampToValueAtTime(0.0001,t+0.09); o.connect(g).connect(this.master); o.start(t); o.stop(t+0.1); }
+  radioHum(){ if(!this.ctx) return; const ctx=this.ctx; if(this.nodes.radio){ try{this.nodes.radio.disconnect();}catch(e){} } const src=ctx.createBufferSource(); src.buffer=this.noiseBuffer(3,false); src.loop=true; const bp=ctx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=800; bp.Q.value=1.2; const g=ctx.createGain(); g.gain.value=0.0; src.connect(bp).connect(g).connect(this.master); src.start(); g.gain.linearRampToValueAtTime(0.08,ctx.currentTime+0.6); this.nodes.radio=g;
+    setTimeout(()=>{ if(!this.ctx) return; const t=ctx.currentTime; const notes=[392,523.25,466.16,349.23]; notes.forEach((f,i)=>{ const o=ctx.createOscillator(); o.type='triangle'; o.frequency.value=f; const og=ctx.createGain(); og.gain.setValueAtTime(0,t+i*0.5); og.gain.linearRampToValueAtTime(0.02,t+i*0.5+0.05); og.gain.exponentialRampToValueAtTime(0.0001,t+i*0.5+0.5); o.connect(og).connect(this.nodes.radio); o.start(t+i*0.5); o.stop(t+i*0.5+0.55); }); },1200);
   }
-
-  // Silence the rain for a few seconds — the dread beat
-  silenceRain(on){
-    if(!this.started) return;
-    const t=this.ctx.currentTime;
-    if(on){
-      this.nodes.rain.gain.linearRampToValueAtTime(0.0, t+0.6);
-      this.nodes.dropletGain.gain.linearRampToValueAtTime(0.0, t+0.4);
-    } else {
-      this.nodes.rain.gain.linearRampToValueAtTime(0.5*this.levelMul(), t+0.8);
-      this.nodes.dropletGain.gain.linearRampToValueAtTime(0.15*this.levelMul(), t+0.6);
-    }
-  }
+  radioStop(){ if(this.nodes.radio){ this.nodes.radio.gain.linearRampToValueAtTime(0.0,this.ctx.currentTime+0.4); } }
+  silenceRain(on){ if(!this.started) return; const t=this.ctx.currentTime; if(on){ this.nodes.rain.gain.linearRampToValueAtTime(0.0,t+0.6); this.nodes.dropletGain.gain.linearRampToValueAtTime(0.0,t+0.4); } else { this.nodes.rain.gain.linearRampToValueAtTime(0.5*this.levelMul(),t+0.8); this.nodes.dropletGain.gain.linearRampToValueAtTime(0.15*this.levelMul(),t+0.6); } }
   levelMul(){ return {0:0.55,1:1,2:1.3}[this.level]||1; }
-
   update(dt){
     if(!this.started) return;
-    const L = state.loop;
-    const t = this.ctx.currentTime;
-    // increase drone with loop
-    const droneTarget = Math.min(0.10, 0.012*L) * this.levelMul();
-    this.nodes.drone.gain.linearRampToValueAtTime(droneTarget, t+0.5);
-    // tape hiss builds
-    const hissTarget = Math.min(0.05, 0.006*Math.max(0,L-3)) * this.levelMul();
-    this.nodes.hiss.gain.linearRampToValueAtTime(hissTarget, t+0.5);
-    // rain position shifts — bandpass frequency drifts (inside vs outside)
-    if(state.rainInside){
-      this.nodes.rainBP.frequency.linearRampToValueAtTime(800, t+2);
-    } else if(state.rainInWalls){
-      this.nodes.rainBP.frequency.linearRampToValueAtTime(1100, t+2);
-    } else {
-      this.nodes.rainBP.frequency.linearRampToValueAtTime(1400, t+2);
-    }
-    this.nodes.wind.gain.linearRampToValueAtTime((0.12 + Math.min(0.1,0.012*L))*this.levelMul(), t+0.5);
+    const L=state.loop; const t=this.ctx.currentTime;
+    this.nodes.drone.gain.linearRampToValueAtTime(Math.min(0.10,0.012*L)*this.levelMul(),t+0.5);
+    this.nodes.hiss.gain.linearRampToValueAtTime(Math.min(0.05,0.006*Math.max(0,L-3))*this.levelMul(),t+0.5);
+    if(state.rainInside) this.nodes.rainBP.frequency.linearRampToValueAtTime(800,t+2);
+    else if(state.rainInWalls) this.nodes.rainBP.frequency.linearRampToValueAtTime(1100,t+2);
+    else this.nodes.rainBP.frequency.linearRampToValueAtTime(1400,t+2);
+    this.nodes.wind.gain.linearRampToValueAtTime((0.12+Math.min(0.1,0.012*L))*this.levelMul(),t+0.5);
   }
 }
 const audio = new Ambience();
@@ -546,9 +244,10 @@ const audio = new Ambience();
 /* ============================ THREE SETUP ============================ */
 const app = document.getElementById('app');
 const scene = new THREE.Scene();
-scene.fog = new THREE.FogExp2(0x0a0806, 0.045);
+scene.fog = new THREE.FogExp2(0x0b0907, 0.038);
+scene.background = new THREE.Color(0x070504);
 
-const camera = new THREE.PerspectiveCamera(68, window.innerWidth/window.innerHeight, 0.05, 120);
+const camera = new THREE.PerspectiveCamera(70, window.innerWidth/window.innerHeight, 0.05, 200);
 camera.position.copy(state.playerPos);
 scene.add(camera);
 
@@ -556,14 +255,15 @@ const renderer = new THREE.WebGLRenderer({ antialias:true, powerPreference:'high
 renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.05;
+renderer.toneMappingExposure = 1.15;
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
 app.appendChild(renderer.domElement);
 
 const composer = new EffectComposer(renderer);
 composer.addPass(new RenderPass(scene,camera));
-const bloom = new UnrealBloomPass(new THREE.Vector2(window.innerWidth,window.innerHeight), 0.9, 0.7, 0.15);
+const bloom = new UnrealBloomPass(new THREE.Vector2(window.innerWidth,window.innerHeight), 0.55, 0.6, 0.2);
 composer.addPass(bloom);
 
 window.addEventListener('resize', ()=>{
@@ -573,225 +273,240 @@ window.addEventListener('resize', ()=>{
   composer.setSize(window.innerWidth,window.innerHeight);
 });
 
+/* ============================ ENVIRONMENT MAP (procedural) ============================ */
+// Small procedural env map so metals and polished surfaces reflect *something* warm
+function buildEnvMap(){
+  const size = 128;
+  const faces = [];
+  for(let i=0;i<6;i++){
+    const c = document.createElement('canvas'); c.width=c.height=size;
+    const ctx = c.getContext('2d');
+    const grad = ctx.createLinearGradient(0,0,0,size);
+    grad.addColorStop(0, '#2a1e12');
+    grad.addColorStop(0.5, '#3a2818');
+    grad.addColorStop(1, '#0e0a06');
+    ctx.fillStyle=grad; ctx.fillRect(0,0,size,size);
+    // warm dot of lamp light
+    const r = ctx.createRadialGradient(size*0.5,size*0.3,0,size*0.5,size*0.3,size*0.6);
+    r.addColorStop(0,'rgba(255,180,107,0.6)');
+    r.addColorStop(1,'rgba(255,180,107,0)');
+    ctx.fillStyle=r; ctx.fillRect(0,0,size,size);
+    faces.push(c);
+  }
+  const cubeTex = new THREE.CubeTexture(faces);
+  cubeTex.needsUpdate = true;
+  cubeTex.colorSpace = THREE.SRGBColorSpace;
+  return cubeTex;
+}
+const envMap = buildEnvMap();
+scene.environment = envMap;
+
 /* ============================ PROCEDURAL TEXTURES ============================ */
-function canvasTex(w,h,draw,{repeat=1, aniso=4}={}){
+function canvasTex(w,h,draw,{repeat=1, aniso=8, colorSpace=THREE.SRGBColorSpace}={}){
   const c=document.createElement('canvas'); c.width=w; c.height=h;
   const ctx=c.getContext('2d'); draw(ctx,w,h);
   const t=new THREE.CanvasTexture(c);
-  t.wrapS=t.wrapT=THREE.RepeatWrapping;
-  t.repeat.set(repeat,repeat);
-  t.anisotropy=aniso;
+  t.wrapS=t.wrapT=THREE.RepeatWrapping; t.repeat.set(repeat,repeat);
+  t.anisotropy=aniso; t.colorSpace=colorSpace;
   return t;
 }
-
-// simple pseudo noise helpers
-function rnd(x,y,seed=0){
-  const n = Math.sin(x*127.1+y*311.7+seed*74.7)*43758.5453;
-  return n-Math.floor(n);
-}
+function rnd(x,y,seed=0){ const n=Math.sin(x*127.1+y*311.7+seed*74.7)*43758.5453; return n-Math.floor(n); }
 function lerp(a,b,t){ return a+(b-a)*t; }
 function smooth(t){ return t*t*(3-2*t); }
-function valueNoise(x,y,seed=0){
-  const xi=Math.floor(x), yi=Math.floor(y);
-  const xf=x-xi, yf=y-yi;
-  const a=rnd(xi,yi,seed), b=rnd(xi+1,yi,seed), c=rnd(xi,yi+1,seed), d=rnd(xi+1,yi+1,seed);
-  const u=smooth(xf), v=smooth(yf);
-  return lerp(lerp(a,b,u), lerp(c,d,u), v);
-}
-function fbm(x,y,oct=4,seed=0){
-  let v=0,amp=0.5,freq=1;
-  for(let i=0;i<oct;i++){ v+=amp*valueNoise(x*freq,y*freq,seed+i*13); freq*=2; amp*=0.5; }
-  return v;
-}
+function valueNoise(x,y,seed=0){ const xi=Math.floor(x),yi=Math.floor(y); const xf=x-xi,yf=y-yi; const a=rnd(xi,yi,seed),b=rnd(xi+1,yi,seed),c=rnd(xi,yi+1,seed),d=rnd(xi+1,yi+1,seed); const u=smooth(xf),v=smooth(yf); return lerp(lerp(a,b,u),lerp(c,d,u),v); }
+function fbm(x,y,oct=4,seed=0){ let v=0,amp=0.5,freq=1; for(let i=0;i<oct;i++){ v+=amp*valueNoise(x*freq,y*freq,seed+i*13); freq*=2; amp*=0.5; } return v; }
 
-// Wallpaper diffuse + normal
 function makeWallpaper(){
-  const draw = (ctx,w,h)=>{
-    ctx.fillStyle='#3a2f24'; ctx.fillRect(0,0,w,h);
-    // vertical stripes
+  return canvasTex(512,512,(ctx,w,h)=>{
+    ctx.fillStyle='#4a3c2c'; ctx.fillRect(0,0,w,h);
     for(let x=0;x<w;x+=32){
-      ctx.fillStyle='#463a2b'; ctx.fillRect(x,0,14,h);
-      ctx.fillStyle='#2f271e'; ctx.fillRect(x+22,0,4,h);
+      ctx.fillStyle='#574832'; ctx.fillRect(x,0,14,h);
+      ctx.fillStyle='#3a2f22'; ctx.fillRect(x+22,0,4,h);
     }
-    // damask-ish motif
     for(let y=0;y<h;y+=64){
       for(let x=0;x<w;x+=64){
         ctx.save(); ctx.translate(x+32,y+32);
-        ctx.strokeStyle='rgba(120,100,70,0.35)'; ctx.lineWidth=1.2;
+        ctx.strokeStyle='rgba(140,118,86,0.4)'; ctx.lineWidth=1.4;
         ctx.beginPath(); ctx.ellipse(0,0,16,26,0,0,Math.PI*2); ctx.stroke();
         ctx.beginPath(); ctx.arc(0,0,6,0,Math.PI*2); ctx.stroke();
         ctx.restore();
       }
     }
-    // mottled stain
     const img=ctx.getImageData(0,0,w,h);
     for(let i=0;i<img.data.length;i+=4){
       const x=(i/4)%w, y=Math.floor((i/4)/w);
-      const n = fbm(x/60,y/60,4,3)*0.18;
-      img.data[i]   *= (1-n*0.4);
-      img.data[i+1] *= (1-n*0.5);
-      img.data[i+2] *= (1-n*0.55);
+      const n=fbm(x/60,y/60,4,3)*0.18;
+      img.data[i]*=(1-n*0.4); img.data[i+1]*=(1-n*0.5); img.data[i+2]*=(1-n*0.55);
     }
     ctx.putImageData(img,0,0);
-  };
-  return canvasTex(512,512,draw,{repeat:2});
+  },{repeat:2});
 }
-function makeNormalFromHeight(heightFn,size=512,strength=2.0){
-  const c=document.createElement('canvas'); c.width=c.height=size;
-  const ctx=c.getContext('2d');
-  const img=ctx.createImageData(size,size);
-  for(let y=0;y<size;y++){
-    for(let x=0;x<size;x++){
-      const hL=heightFn((x-1)/size,(y)/size);
-      const hR=heightFn((x+1)/size,(y)/size);
-      const hD=heightFn((x)/size,(y-1)/size);
-      const hU=heightFn((x)/size,(y+1)/size);
-      let nx=(hL-hR)*strength, ny=(hD-hU)*strength, nz=1;
-      const len=Math.hypot(nx,ny,nz); nx/=len; ny/=len; nz/=len;
-      const i=(y*size+x)*4;
-      img.data[i]=  (nx*0.5+0.5)*255;
-      img.data[i+1]=(ny*0.5+0.5)*255;
-      img.data[i+2]=(nz*0.5+0.5)*255;
-      img.data[i+3]=255;
-    }
-  }
-  ctx.putImageData(img,0,0);
-  const t=new THREE.CanvasTexture(c);
-  t.wrapS=t.wrapT=THREE.RepeatWrapping;
-  return t;
-}
-
 function makeWoodDiffuse(){
   return canvasTex(512,512,(ctx,w,h)=>{
-    ctx.fillStyle='#3a2818'; ctx.fillRect(0,0,w,h);
+    ctx.fillStyle='#4a3420'; ctx.fillRect(0,0,w,h);
     for(let y=0;y<h;y+=2){
-      const v = 0.5 + 0.5*Math.sin(y*0.35 + fbm(0,y/40,3,7)*8);
-      ctx.fillStyle=`rgba(${60+v*30},${40+v*22},${24+v*14},0.35)`;
+      const v=0.5+0.5*Math.sin(y*0.35+fbm(0,y/40,3,7)*8);
+      ctx.fillStyle=`rgba(${80+v*40},${55+v*28},${32+v*16},0.4)`;
       ctx.fillRect(0,y,w,2);
     }
-    // darker grain lines
     for(let i=0;i<60;i++){
       const x=Math.random()*w, y=Math.random()*h;
-      ctx.strokeStyle='rgba(20,12,6,0.4)'; ctx.lineWidth=Math.random()*1.5+0.5;
+      ctx.strokeStyle='rgba(28,16,8,0.5)'; ctx.lineWidth=Math.random()*1.5+0.5;
       ctx.beginPath(); ctx.moveTo(x,y);
-      ctx.bezierCurveTo(x+Math.random()*20-10,y+30, x+Math.random()*20-10,y+60, x+Math.random()*30-15,y+120);
+      ctx.bezierCurveTo(x+Math.random()*20-10,y+30,x+Math.random()*20-10,y+60,x+Math.random()*30-15,y+120);
       ctx.stroke();
     }
   },{repeat:2});
 }
-
 function makeConcreteDiffuse(){
   return canvasTex(512,512,(ctx,w,h)=>{
-    ctx.fillStyle='#2a2723'; ctx.fillRect(0,0,w,h);
+    ctx.fillStyle='#3a3630'; ctx.fillRect(0,0,w,h);
     const img=ctx.getImageData(0,0,w,h);
     for(let i=0;i<img.data.length;i+=4){
       const x=(i/4)%w, y=Math.floor((i/4)/w);
-      const n = fbm(x/40,y/40,4,11);
-      const c = 34 + n*40;
+      const n=fbm(x/40,y/40,4,11);
+      const c=50+n*50;
       img.data[i]=c; img.data[i+1]=c*0.97; img.data[i+2]=c*0.93;
     }
     ctx.putImageData(img,0,0);
-    // cracks
     for(let i=0;i<8;i++){
       let x=Math.random()*w,y=Math.random()*h;
-      ctx.strokeStyle='rgba(10,8,6,0.6)'; ctx.lineWidth=Math.random()*1.5+0.5;
+      ctx.strokeStyle='rgba(14,10,8,0.7)'; ctx.lineWidth=Math.random()*1.5+0.5;
       ctx.beginPath(); ctx.moveTo(x,y);
       for(let s=0;s<12;s++){ x+=Math.random()*20-10; y+=Math.random()*20-10; ctx.lineTo(x,y); }
       ctx.stroke();
     }
   },{repeat:2});
 }
+function makeNormalFromHeight(heightFn,size=256,strength=2.0){
+  const c=document.createElement('canvas'); c.width=c.height=size;
+  const ctx=c.getContext('2d'); const img=ctx.createImageData(size,size);
+  for(let y=0;y<size;y++){
+    for(let x=0;x<size;x++){
+      const hL=heightFn((x-1)/size,y/size), hR=heightFn((x+1)/size,y/size);
+      const hD=heightFn(x/size,(y-1)/size), hU=heightFn(x/size,(y+1)/size);
+      let nx=(hL-hR)*strength, ny=(hD-hU)*strength, nz=1;
+      const len=Math.hypot(nx,ny,nz); nx/=len; ny/=len; nz/=len;
+      const i=(y*size+x)*4;
+      img.data[i]=(nx*0.5+0.5)*255; img.data[i+1]=(ny*0.5+0.5)*255; img.data[i+2]=(nz*0.5+0.5)*255; img.data[i+3]=255;
+    }
+  }
+  ctx.putImageData(img,0,0);
+  const t=new THREE.CanvasTexture(c);
+  t.wrapS=t.wrapT=THREE.RepeatWrapping;
+  t.colorSpace=THREE.NoColorSpace;
+  return t;
+}
+function makeRoughnessMap(){
+  // Grayscale canvas texture — floor sheen
+  const size=256;
+  const c=document.createElement('canvas'); c.width=c.height=size;
+  const ctx=c.getContext('2d'); const img=ctx.createImageData(size,size);
+  for(let y=0;y<size;y++){
+    for(let x=0;x<size;x++){
+      const n=fbm(x/30,y/30,4,5);
+      const wet = Math.pow(fbm(x/50,y/50,3,9), 2.0)*0.7;
+      const v = Math.max(0.05, Math.min(1, 0.35 + n*0.3 - wet*0.4));
+      const i=(y*size+x)*4;
+      const c255=Math.floor(v*255);
+      img.data[i]=c255; img.data[i+1]=c255; img.data[i+2]=c255; img.data[i+3]=255;
+    }
+  }
+  ctx.putImageData(img,0,0);
+  const t=new THREE.CanvasTexture(c);
+  t.wrapS=t.wrapT=THREE.RepeatWrapping; t.repeat.set(3,3);
+  t.colorSpace=THREE.NoColorSpace;
+  return t;
+}
 
-// build textures
 const texWall = makeWallpaper();
 const texWallN = makeNormalFromHeight((u,v)=>{
-  // subtle plaster bumps + motif ridges
-  const n = fbm(u*12,v*12,4,3)*0.6;
-  const stripe = Math.abs(((u*8)%1)-0.5)<0.18?0.15:0;
+  const n=fbm(u*12,v*12,4,3)*0.6;
+  const stripe = Math.abs(((u*8)%1)-0.5)<0.18?0.18:0;
   return n+stripe;
-},256,1.4);
+},256,1.6);
 texWallN.repeat.set(2,2);
 
 const texWood = makeWoodDiffuse();
-const texWoodN = makeNormalFromHeight((u,v)=>{
-  return fbm(u*30,v*4,3,9)*0.7;
-},256,1.2);
+const texWoodN = makeNormalFromHeight((u,v)=>fbm(u*30,v*4,3,9)*0.7,256,1.3);
 texWoodN.repeat.set(2,2);
 
 const texConcrete = makeConcreteDiffuse();
-const texConcreteN = makeNormalFromHeight((u,v)=>{
-  return fbm(u*18,v*18,5,21)*0.8;
-},256,1.2);
+const texConcreteN = makeNormalFromHeight((u,v)=>fbm(u*18,v*18,5,21)*0.8,256,1.3);
 texConcreteN.repeat.set(3,3);
 
-// Floor (dark wet wood/asphalt)
 const texFloor = canvasTex(512,512,(ctx,w,h)=>{
-  ctx.fillStyle='#1a1510'; ctx.fillRect(0,0,w,h);
-  // wood planks
-  for(let y=0;y<h;y+=48){
-    ctx.fillStyle='#211a12'; ctx.fillRect(0,y,w,46);
-    ctx.strokeStyle='rgba(8,6,4,0.9)'; ctx.lineWidth=2;
+  ctx.fillStyle='#2a2016'; ctx.fillRect(0,0,w,h);
+  for(let y=0;y<h;y+=64){
+    ctx.fillStyle='#32281c'; ctx.fillRect(0,y,w,60);
+    ctx.strokeStyle='rgba(10,8,6,0.9)'; ctx.lineWidth=2;
     ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke();
-    for(let x=0;x<w;x+=120){
-      ctx.strokeStyle='rgba(8,6,4,0.6)';
-      ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x,y+48); ctx.stroke();
+    for(let x=(y/64%2)*80;x<w;x+=160){
+      ctx.strokeStyle='rgba(10,8,6,0.6)';
+      ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x,y+64); ctx.stroke();
     }
+    const v=0.5+0.5*Math.sin(y*0.8);
+    ctx.fillStyle=`rgba(${70+v*30},${50+v*22},${30+v*14},0.25)`;
+    ctx.fillRect(0,y,w,60);
   }
-  // mottle
   const img=ctx.getImageData(0,0,w,h);
   for(let i=0;i<img.data.length;i+=4){
     const x=(i/4)%w, y=Math.floor((i/4)/w);
     const n=fbm(x/50,y/50,4,4)*0.25;
-    img.data[i]*= (1-n*0.4); img.data[i+1]*=(1-n*0.4); img.data[i+2]*=(1-n*0.4);
+    img.data[i]*=(1-n*0.4); img.data[i+1]*=(1-n*0.4); img.data[i+2]*=(1-n*0.4);
   }
   ctx.putImageData(img,0,0);
 },{repeat:3});
-const texFloorN = makeNormalFromHeight((u,v)=>fbm(u*14,v*14,4,31)*0.6,256,0.9);
+const texFloorN = makeNormalFromHeight((u,v)=>fbm(u*14,v*14,4,31)*0.6,256,1.0);
 texFloorN.repeat.set(3,3);
+const texFloorRough = makeRoughnessMap();
 
-/* ============================ BUILD APARTMENT ============================ */
+/* ============================ WORLD BUILD ============================ */
 const world = new THREE.Group();
 scene.add(world);
 
-const colliders = []; // {min, max} AABB in XZ
-
+const colliders = [];
 function addAABB(x,z,w,d){ colliders.push({minX:x-w/2,maxX:x+w/2,minZ:z-d/2,maxZ:z+d/2}); }
 
-// Wall helper
 function wall(x,z,w,h,d,mat){
-  const geo = new THREE.BoxGeometry(w,h,d);
-  const m = new THREE.Mesh(geo, mat);
+  const m = new THREE.Mesh(new THREE.BoxGeometry(w,h,d), mat);
   m.position.set(x,h/2,z);
   m.castShadow = m.receiveShadow = true;
   world.add(m); addAABB(x,z,w,d);
   return m;
 }
 
+// Materials (better calibrated)
 const matWall = new THREE.MeshStandardMaterial({
-  map:texWall, normalMap:texWallN, normalScale:new THREE.Vector2(0.6,0.6),
-  roughness:0.92, metalness:0.02, color:0x9a8b6f
+  map:texWall, normalMap:texWallN, normalScale:new THREE.Vector2(0.7,0.7),
+  roughness:0.88, metalness:0.02, color:0xb8a888
 });
 const matWood = new THREE.MeshStandardMaterial({
-  map:texWood, normalMap:texWoodN, roughness:0.7, metalness:0.05, color:0xa88c66
+  map:texWood, normalMap:texWoodN, normalScale:new THREE.Vector2(0.5,0.5),
+  roughness:0.62, metalness:0.08, color:0xc0a06a
 });
 const matFloor = new THREE.MeshStandardMaterial({
-  map:texFloor, normalMap:texFloorN, normalScale:new THREE.Vector2(0.5,0.5),
-  roughness:0.55, metalness:0.15, color:0x9a8a70
+  map:texFloor, normalMap:texFloorN, normalScale:new THREE.Vector2(0.55,0.55),
+  roughnessMap:texFloorRough, roughness:0.65, metalness:0.22, color:0xb0a080,
+  envMapIntensity:0.8
 });
-const matCeil = new THREE.MeshStandardMaterial({ color:0x1a1712, roughness:0.95 });
+const matCeil = new THREE.MeshStandardMaterial({ color:0x221c14, roughness:0.95 });
 const matConcrete = new THREE.MeshStandardMaterial({
-  map:texConcrete, normalMap:texConcreteN, roughness:0.9, color:0x8a8278
+  map:texConcrete, normalMap:texConcreteN, normalScale:new THREE.Vector2(0.7,0.7),
+  roughness:0.92, metalness:0.04, color:0xa89e90
 });
 
-// APARTMENT 5B — small room, centered at (0,0), ~6x6
-// Walls
-const H=3.0;
+/* ============================ APARTMENT 5B ============================ */
+const H = 3.0;
 wall(0,-3.05,6.2,H,0.2,matWall); // north
 wall(0, 3.05,6.2,H,0.2,matWall); // south
 wall(-3.05,0,0.2,H,6.2,matWall); // west
-wall( 3.05,0,0.2,H,6.2,matWall); // east (with door gap later)
+// east wall in two segments to leave door gap
+wall( 3.05, 1.85, 0.2, H, 2.4, matWall);
+wall( 3.05,-1.85, 0.2, H, 2.4, matWall);
+wall( 3.05, 0,   0.2, H-2.3, 1.4, matWall); // above door (header) — placed high
 
-// Floor & Ceiling
+// Floor & ceiling
 {
   const f = new THREE.Mesh(new THREE.PlaneGeometry(6,6), matFloor);
   f.rotation.x=-Math.PI/2; f.receiveShadow=true; world.add(f);
@@ -799,486 +514,669 @@ wall( 3.05,0,0.2,H,6.2,matWall); // east (with door gap later)
   c.rotation.x=Math.PI/2; c.position.y=H; c.receiveShadow=true; world.add(c);
 }
 
-// Door to hallway on east wall — leave a gap by rebuilding east wall in two segments
-// (we already placed a full east wall; replace with segments)
-// For simplicity, use the full wall but put a door "opening" visually by a dark recess + door frame
-// Actually let's create a proper gap:
-// Remove the east collider effect by allowing passage at a specific z with door open
-// We'll add the door frame + a real exit.
-
-// Door frame on east (x=3.05)
-const doorFrame = new THREE.Group();
+// Baseboards
 {
-  const fm = new THREE.MeshStandardMaterial({ map:texWood, normalMap:texWoodN, roughness:0.6, color:0x6a5238 });
-  const postL = new THREE.Mesh(new THREE.BoxGeometry(0.12,2.3,0.14), fm); postL.position.set(3.02,1.15,0.7);
-  const postR = new THREE.Mesh(new THREE.BoxGeometry(0.12,2.3,0.14), fm); postR.position.set(3.02,1.15,-0.7);
-  const top = new THREE.Mesh(new THREE.BoxGeometry(0.12,0.14,1.54), fm); top.position.set(3.02,2.23,0);
-  doorFrame.add(postL,postR,top);
-  world.add(doorFrame);
+  const bm = new THREE.MeshStandardMaterial({ map:texWood, normalMap:texWoodN, roughness:0.6, color:0x3a2818 });
+  const b1 = new THREE.Mesh(new THREE.BoxGeometry(6,0.12,0.04), bm);
+  b1.position.set(0,0.06,-2.94); world.add(b1);
+  const b2 = b1.clone(); b2.position.z=2.94; world.add(b2);
+  const b3 = new THREE.Mesh(new THREE.BoxGeometry(0.04,0.12,6), bm);
+  b3.position.set(-2.94,0.06,0); world.add(b3);
+  const b4 = b3.clone(); b4.position.x=2.94; world.add(b4);
 }
-// Door slab
-const doorMat = new THREE.MeshStandardMaterial({ map:texWood, normalMap:texWoodN, roughness:0.55, metalness:0.1, color:0x5a4630 });
-const doorSlab = new THREE.Mesh(new THREE.BoxGeometry(0.08,2.15,1.4), doorMat);
-doorSlab.position.set(3.02,1.1,0);
-doorSlab.castShadow=true;
-world.add(doorSlab);
 
-// Door knob
-const knobMat = new THREE.MeshStandardMaterial({ color:0xc8a86a, metalness:0.9, roughness:0.25 });
-const knob = new THREE.Mesh(new THREE.SphereGeometry(0.05,16,12), knobMat);
-knob.position.set(2.94,1.1,0.55); world.add(knob);
-
-// Warm lamp (ceiling pendant)
-const lampMat = new THREE.MeshStandardMaterial({ color:0x332a1e, roughness:0.6, metalness:0.4 });
-const lampGeo = new THREE.ConeGeometry(0.35,0.4,20,1,true);
-const lampShade = new THREE.Mesh(lampGeo, lampMat);
-lampShade.position.set(0,2.5,0); lampShade.rotation.x=Math.PI; world.add(lampShade);
-const bulbMat = new THREE.MeshBasicMaterial({ color:0xffcf8a });
-const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.06,12,10), bulbMat);
-bulb.position.set(0,2.35,0); world.add(bulb);
-
-const pendantLight = new THREE.PointLight(0xffb46b, 18, 9, 1.8);
-pendantLight.position.set(0,2.3,0);
-pendantLight.castShadow = true;
-pendantLight.shadow.mapSize.set(1024,1024);
-pendantLight.shadow.bias = -0.0015;
-scene.add(pendantLight);
-
-// Window on north wall — rain outside
-const winFrameMat = new THREE.MeshStandardMaterial({ map:texWood, normalMap:texWoodN, roughness:0.7, color:0x4a3a26 });
+/* ============================ DOOR (FULL) ============================ */
+const doorMat = new THREE.MeshStandardMaterial({
+  map:texWood, normalMap:texWoodN, normalScale:new THREE.Vector2(0.7,0.7),
+  roughness:0.5, metalness:0.12, color:0x8a6a48
+});
+// Door leaf with recessed panels
+const doorGroup = new THREE.Group();
 {
-  const ww=2.4, wh=1.5, wy=1.9, wz=-3.0;
-  const winGroup = new THREE.Group();
-  const frameL=new THREE.Mesh(new THREE.BoxGeometry(0.1,wh,0.12),winFrameMat); frameL.position.set(-ww/2,wy,wz+0.03);
-  const frameR=new THREE.Mesh(new THREE.BoxGeometry(0.1,wh,0.12),winFrameMat); frameR.position.set(ww/2,wy,wz+0.03);
-  const frameT=new THREE.Mesh(new THREE.BoxGeometry(ww,0.1,0.12),winFrameMat); frameT.position.set(0,wy+wh/2,wz+0.03);
-  const frameB=new THREE.Mesh(new THREE.BoxGeometry(ww,0.1,0.12),winFrameMat); frameB.position.set(0,wy-wh/2,wz+0.03);
-  const frameM=new THREE.Mesh(new THREE.BoxGeometry(0.06,wh,0.1),winFrameMat); frameM.position.set(0,wy,wz+0.03);
-  winGroup.add(frameL,frameR,frameT,frameB,frameM);
+  const leaf = new THREE.Mesh(new THREE.BoxGeometry(0.08, 2.15, 1.4), doorMat);
+  leaf.position.y = 1.075;
+  leaf.castShadow = leaf.receiveShadow = true;
+  doorGroup.add(leaf);
+  // inset panels (slightly recessed boxes)
+  const panelMat = new THREE.MeshStandardMaterial({
+    map:texWood, normalMap:texWoodN, roughness:0.45, metalness:0.15, color:0x7a5a3a
+  });
+  for(const [cy,cz] of [[1.55,0.0],[0.55,0.0]]){
+    const p = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.7, 0.9), panelMat);
+    p.position.set(0.01, cy, cz);
+    doorGroup.add(p);
+    // frame around panel
+    const frMat = new THREE.MeshStandardMaterial({ map:texWood, roughness:0.4, metalness:0.2, color:0x9a7a52 });
+    const ft = new THREE.Mesh(new THREE.BoxGeometry(0.02,0.05,0.98), frMat); ft.position.set(0.045, cy+0.375, cz); doorGroup.add(ft);
+    const fb = ft.clone(); fb.position.y = cy-0.375; doorGroup.add(fb);
+    const fl = new THREE.Mesh(new THREE.BoxGeometry(0.02,0.75,0.05), frMat); fl.position.set(0.045, cy, cz-0.475); doorGroup.add(fl);
+    const fr = fl.clone(); fr.position.z = cz+0.475; doorGroup.add(fr);
+  }
+  // Doorframe (posts + header)
+  const frameMat = new THREE.MeshStandardMaterial({
+    map:texWood, normalMap:texWoodN, roughness:0.55, metalness:0.1, color:0x6a4a30
+  });
+  const postL = new THREE.Mesh(new THREE.BoxGeometry(0.14, 2.3, 0.12), frameMat);
+  postL.position.set(-0.02, 1.15, 0.71); doorGroup.add(postL);
+  const postR = postL.clone(); postR.position.z = -0.71; doorGroup.add(postR);
+  const top = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.16, 1.54), frameMat);
+  top.position.set(-0.02, 2.28, 0); doorGroup.add(top);
+  // Knob + keyhole
+  const knobMat = new THREE.MeshStandardMaterial({ color:0xd8b878, metalness:1.0, roughness:0.15, envMapIntensity:1.5 });
+  const knob = new THREE.Mesh(new THREE.SphereGeometry(0.055, 20, 16), knobMat);
+  knob.position.set(-0.06, 1.05, 0.5); doorGroup.add(knob);
+  const knobStem = new THREE.Mesh(new THREE.CylinderGeometry(0.02,0.02,0.04,12), knobMat);
+  knobStem.rotation.z = Math.PI/2; knobStem.position.set(-0.04, 1.05, 0.5); doorGroup.add(knobStem);
+  // keyhole plate
+  const plate = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.12, 0.05), knobMat);
+  plate.position.set(-0.06, 1.05, 0.38); doorGroup.add(plate);
+  // number plaque "5B"
+  const plaqueCanvas = document.createElement('canvas'); plaqueCanvas.width=256; plaqueCanvas.height=128;
+  const pctx = plaqueCanvas.getContext('2d');
+  pctx.fillStyle='#1a1410'; pctx.fillRect(0,0,256,128);
+  pctx.strokeStyle='#8a6a40'; pctx.lineWidth=6; pctx.strokeRect(6,6,244,116);
+  pctx.fillStyle='#e8c890'; pctx.font='bold 72px Courier New'; pctx.textAlign='center'; pctx.textBaseline='middle';
+  pctx.fillText('5B', 128, 68);
+  const plaqueTex = new THREE.CanvasTexture(plaqueCanvas);
+  plaqueTex.colorSpace = THREE.SRGBColorSpace;
+  const plaqueMat = new THREE.MeshStandardMaterial({ map:plaqueTex, emissive:0x332010, emissiveMap:plaqueTex, emissiveIntensity:0.6, roughness:0.4, metalness:0.5 });
+  const plaque = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.16, 0.32), plaqueMat);
+  plaque.position.set(-0.06, 1.65, 0); doorGroup.add(plaque);
+
+  doorGroup.position.set(3.0, 0, 0);
+  doorGroup.traverse(o=>{ if(o.isMesh){ o.castShadow = true; o.receiveShadow = true; } });
+  world.add(doorGroup);
+}
+
+/* ============================ WINDOW (REAL DEPTH) ============================ */
+// Window frame + thick sill + glass + parallax city behind
+const winGroup = new THREE.Group();
+{
+  const frameMat = new THREE.MeshStandardMaterial({
+    map:texWood, normalMap:texWoodN, roughness:0.55, metalness:0.1, color:0x6a4a30
+  });
+  const W = 2.4, Hh = 1.5, yC = 1.9, zW = -3.0;
+  // Wall recess (dark)
+  const recess = new THREE.Mesh(new THREE.BoxGeometry(W+0.2, Hh+0.2, 0.4), new THREE.MeshStandardMaterial({ color:0x0a0806, roughness:1 }));
+  recess.position.set(0, yC, zW-0.1); world.add(recess);
+  // Frame posts and rails (thicker, chunkier)
+  const fL = new THREE.Mesh(new THREE.BoxGeometry(0.12, Hh, 0.18), frameMat); fL.position.set(-W/2, yC, zW+0.05);
+  const fR = fL.clone(); fR.position.x = W/2;
+  const fT = new THREE.Mesh(new THREE.BoxGeometry(W, 0.12, 0.18), frameMat); fT.position.set(0, yC+Hh/2, zW+0.05);
+  const fB = fT.clone(); fB.position.y = yC-Hh/2;
+  const fMv = new THREE.Mesh(new THREE.BoxGeometry(0.08, Hh, 0.14), frameMat); fMv.position.set(0, yC, zW+0.05);
+  const fMh = new THREE.Mesh(new THREE.BoxGeometry(W, 0.06, 0.14), frameMat); fMh.position.set(0, yC, zW+0.05);
+  winGroup.add(fL, fR, fT, fB, fMv, fMh);
+  // Sill
+  const sill = new THREE.Mesh(new THREE.BoxGeometry(W+0.3, 0.08, 0.25), frameMat);
+  sill.position.set(0, yC-Hh/2-0.08, zW+0.14); winGroup.add(sill);
+  // Wall trim around window
+  const trim = new THREE.Mesh(new THREE.BoxGeometry(W+0.4, Hh+0.4, 0.04), new THREE.MeshStandardMaterial({ color:0x2a2016, roughness:0.85 }));
+  trim.position.set(0, yC, zW+0.08); winGroup.add(trim);
+  winGroup.position.set(0,0,0);
+  winGroup.traverse(o=>{ if(o.isMesh){ o.castShadow=true; o.receiveShadow=true; } });
   world.add(winGroup);
 
-  // Glass pane with rain droplets shader
-  const glassGeo = new THREE.PlaneGeometry(ww-0.1, wh-0.1);
+  // Glass pane — droplet shader with refraction-look, plus subtle depth
+  const glassGeo = new THREE.PlaneGeometry(W-0.12, Hh-0.12);
   const glassMat = new THREE.ShaderMaterial({
     transparent:true, depthWrite:false,
     uniforms:{
       uTime:{value:0},
       uRain:{value:1.0},
-      uColor:{value:new THREE.Color(0x0a1018)}
+      uTint:{value:new THREE.Color(0x0a1018)},
+      uWarm:{value:new THREE.Color(0x3a2818)}
     },
     vertexShader:`
       varying vec2 vUv;
-      void main(){ vUv=uv; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0); }
+      varying vec3 vPos;
+      void main(){ vUv=uv; vPos=position; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }
     `,
     fragmentShader:`
       varying vec2 vUv;
-      uniform float uTime; uniform float uRain; uniform vec3 uColor;
+      uniform float uTime; uniform float uRain; uniform vec3 uTint; uniform vec3 uWarm;
       float hash(vec2 p){ return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453); }
       void main(){
-        vec2 uv=vUv;
-        // rain drops — small beads sliding
-        float acc=0.0;
-        for(int i=0;i<3;i++){
+        vec2 uv = vUv;
+        // multiple drop layers with different scales — creates a sense of depth
+        float acc = 0.0;
+        float hi = 0.0;
+        for(int i=0;i<4;i++){
           float fi=float(i);
-          vec2 g = floor(uv*vec2(60.0+fi*15.0, 90.0+fi*22.0));
-          vec2 f = fract(uv*vec2(60.0+fi*15.0, 90.0+fi*22.0));
-          float h=hash(g+fi);
-          vec2 c = vec2(0.5+0.3*sin(h*30.0+uTime*0.2), 0.5+0.3*cos(h*20.0+uTime*0.15));
+          float scale = 40.0 + fi*22.0;
+          vec2 g = floor(uv*vec2(scale, scale*1.4));
+          vec2 f = fract(uv*vec2(scale, scale*1.4));
+          float h = hash(g+fi*7.3);
+          // drop center sways slightly
+          vec2 c = vec2(0.5 + 0.25*sin(h*30.0 + uTime*0.3*(0.5+h)), 0.5 + 0.25*cos(h*22.0 + uTime*0.22));
           float d = length(f-c);
-          float drop = smoothstep(0.35,0.1,d)*h;
-          // slow vertical slide
-          float slide = fract(uv.y*3.0 + uTime*0.02*(h+0.3) + h*10.0);
-          drop *= smoothstep(0.4,0.0,abs(slide-0.5));
-          acc = max(acc,drop);
+          float drop = smoothstep(0.32, 0.05, d) * h;
+          // slow vertical slide; drop trail brighter at bottom
+          float slide = fract(uv.y*2.0 + uTime*0.015*(0.5+h) + h*5.0);
+          drop *= smoothstep(0.5, 0.0, abs(slide-0.5));
+          // only some cells have drops
+          drop *= step(0.55, h);
+          acc = max(acc, drop);
+          hi = max(hi, drop * (0.4 + 0.6*h));
         }
-        vec3 base = uColor;
-        vec3 lit = mix(base, base*4.0+vec3(0.15,0.18,0.24), acc*uRain);
-        float blur = smoothstep(0.0,1.0,vUv.y);
-        gl_FragColor = vec4(lit, 0.9);
+        // base cold-window color with subtle vertical gradient
+        vec3 base = mix(uTint*0.6, uTint*1.4, vUv.y);
+        // warm interior reflection near bottom (where lamp light hits the glass)
+        base += uWarm * 0.25 * smoothstep(0.6, 0.0, vUv.y);
+        // drops: bright rim + darker center (refraction illusion)
+        vec3 dropCol = mix(base*2.5, vec3(0.7,0.8,0.95), 0.4);
+        vec3 col = mix(base, dropCol, acc * 0.9 * uRain);
+        // bright highlight on drop top edge
+        col += vec3(0.9,0.95,1.0) * hi * 0.5 * uRain;
+        // faint window reflection (diagonal streak)
+        float streak = smoothstep(0.0, 0.15, abs(uv.x - uv.y*0.7 - 0.15));
+        col += vec3(0.15,0.12,0.08) * (1.0-streak) * 0.4;
+        gl_FragColor = vec4(col, 0.92);
       }
     `
   });
   const glass = new THREE.Mesh(glassGeo, glassMat);
-  glass.position.set(0,wy,wz+0.12);
+  glass.position.set(0, yC, zW+0.16);
   world.add(glass);
   window.__glass = glassMat;
 
-  // Outside light (cold blue behind window)
-  const outLight = new THREE.RectAreaLight ? null : null;
-  const outPoint = new THREE.PointLight(0x6f89b8, 3.5, 8, 2);
-  outPoint.position.set(0, wy, wz-0.8);
+  // PARALLAX CITY — sits far back, but visible through glass, with depth layers
+  // Layer 1 (distant skyline, soft)
+  const skylineCanvas = document.createElement('canvas');
+  skylineCanvas.width = 1024; skylineCanvas.height = 512;
+  const sctx = skylineCanvas.getContext('2d');
+  // sky gradient
+  const sky = sctx.createLinearGradient(0,0,0,512);
+  sky.addColorStop(0,'#0a1420'); sky.addColorStop(0.5,'#16202c'); sky.addColorStop(1,'#2a2018');
+  sctx.fillStyle=sky; sctx.fillRect(0,0,1024,512);
+  // distant buildings
+  for(let i=0;i<60;i++){
+    const bx = Math.random()*1024;
+    const bw = 20+Math.random()*60;
+    const bh = 80+Math.random()*300;
+    const by = 512 - bh - Math.random()*80;
+    sctx.fillStyle = `rgba(12,16,22,${0.7+Math.random()*0.3})`;
+    sctx.fillRect(bx, by, bw, bh);
+    // warm windows
+    for(let wy=by+10; wy<512-10; wy+=14){
+      for(let wx=bx+6; wx<bx+bw-6; wx+=10){
+        if(Math.random()<0.35){
+          const warm = Math.random();
+          sctx.fillStyle = warm>0.5 ? `rgba(255,180,90,${0.5+Math.random()*0.5})` : `rgba(180,220,255,${0.4+Math.random()*0.4})`;
+          sctx.fillRect(wx, wy, 4, 6);
+        }
+      }
+    }
+  }
+  // close buildings (foreground, darker)
+  for(let i=0;i<12;i++){
+    const bx = Math.random()*1024;
+    const bw = 80+Math.random()*120;
+    const bh = 200+Math.random()*250;
+    const by = 512 - bh;
+    sctx.fillStyle = `rgba(6,8,12,0.95)`;
+    sctx.fillRect(bx, by, bw, bh);
+    // a few lit windows
+    for(let wy=by+20; wy<500; wy+=22){
+      for(let wx=bx+14; wx<bx+bw-14; wx+=18){
+        if(Math.random()<0.15){
+          sctx.fillStyle = `rgba(255,170,80,${0.4+Math.random()*0.4})`;
+          sctx.fillRect(wx, wy, 6, 8);
+        }
+      }
+    }
+  }
+  // faint rain streaks baked in
+  sctx.strokeStyle = 'rgba(180,200,220,0.15)';
+  for(let i=0;i<300;i++){
+    const rx=Math.random()*1024, ry=Math.random()*512;
+    sctx.lineWidth = 1;
+    sctx.beginPath(); sctx.moveTo(rx,ry); sctx.lineTo(rx-4,ry+20); sctx.stroke();
+  }
+  const skylineTex = new THREE.CanvasTexture(skylineCanvas);
+  skylineTex.colorSpace = THREE.SRGBColorSpace;
+  const cityMesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(20, 10),
+    new THREE.MeshBasicMaterial({ map:skylineTex, toneMapped:true })
+  );
+  cityMesh.position.set(0, yC+0.5, zW-3.0);
+  world.add(cityMesh);
+  window.__cityMesh = cityMesh;
+
+  // Light behind window (cold moonlight)
+  const outPoint = new THREE.PointLight(0x7a95c8, 2.5, 10, 2);
+  outPoint.position.set(0, yC, zW-0.8);
   scene.add(outPoint);
 
-  // Outside plane — distant city / dark sky (visible through glass)
-  const cityMat = new THREE.ShaderMaterial({
-    uniforms:{ uTime:{value:0}, uRain:{value:1.0} },
-    vertexShader:`varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
-    fragmentShader:`
-      varying vec2 vUv; uniform float uTime; uniform float uRain;
-      float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
-      void main(){
-        vec3 sky = mix(vec3(0.02,0.03,0.05), vec3(0.06,0.08,0.12), vUv.y);
-        // distant window lights
-        vec2 g=floor(vUv*vec2(60.0,30.0));
-        float h=hash(g);
-        float lit = step(0.94,h)*0.6;
-        vec3 win = vec3(1.0,0.75,0.4)*lit;
-        // rain streaks
-        vec2 rg = floor(vUv*vec2(200.0,20.0));
-        float rh=hash(rg+floor(uTime*10.0));
-        float streak = step(0.97,rh)*0.4*uRain;
-        vec3 col = sky + win*0.5 + vec3(0.4,0.5,0.7)*streak;
-        gl_FragColor = vec4(col,1.0);
-      }
-    `
-  });
-  const city = new THREE.Mesh(new THREE.PlaneGeometry(8,5), cityMat);
-  city.position.set(0, wy, wz-2.0);
-  world.add(city);
-  window.__city = cityMat;
+  // Rain sound emitter stronger near window
+  // (state-driven, not actual emitter)
 }
 
-// Couch (cozy)
+/* ============================ FURNITURE ============================ */
+// Couch
 function makeCouch(){
-  const g=new THREE.Group();
-  const cm=new THREE.MeshStandardMaterial({map:texWood,normalMap:texWoodN,roughness:0.85,color:0x5a3a2e});
-  const cushMat=new THREE.MeshStandardMaterial({roughness:0.9,color:0x6a4034});
-  const base=new THREE.Mesh(new THREE.BoxGeometry(2.0,0.5,0.9),cm); base.position.y=0.35;
-  const back=new THREE.Mesh(new THREE.BoxGeometry(2.0,0.9,0.2),cushMat); back.position.set(0,0.85,-0.35);
-  const armL=new THREE.Mesh(new THREE.BoxGeometry(0.2,0.6,0.9),cushMat); armL.position.set(-0.95,0.7,0);
-  const armR=new THREE.Mesh(new THREE.BoxGeometry(0.2,0.6,0.9),cushMat); armR.position.set(0.95,0.7,0);
-  const seat=new THREE.Mesh(new THREE.BoxGeometry(1.8,0.15,0.85),cushMat); seat.position.y=0.62;
-  g.add(base,back,armL,armR,seat);
+  const g = new THREE.Group();
+  const wood = new THREE.MeshStandardMaterial({ map:texWood, normalMap:texWoodN, roughness:0.7, metalness:0.15, color:0x6a4030 });
+  const cushion = new THREE.MeshStandardMaterial({ color:0x7a4a3a, roughness:0.9, metalness:0.02 });
+  const base = new THREE.Mesh(new THREE.BoxGeometry(2.0,0.5,0.9), wood); base.position.y=0.3;
+  const back = new THREE.Mesh(new THREE.BoxGeometry(2.0,0.9,0.22), cushion); back.position.set(0,0.9,-0.35);
+  const armL = new THREE.Mesh(new THREE.BoxGeometry(0.22,0.6,0.9), cushion); armL.position.set(-0.95,0.65,0);
+  const armR = armL.clone(); armR.position.x = 0.95;
+  const seatL = new THREE.Mesh(new THREE.BoxGeometry(0.85,0.18,0.8), cushion); seatL.position.set(-0.45,0.6,0.02);
+  const seatR = seatL.clone(); seatR.position.x = 0.45;
+  g.add(base,back,armL,armR,seatL,seatR);
   g.position.set(-1.9,0,-1.6); g.rotation.y = Math.PI/2;
-  g.traverse(o=>{if(o.isMesh){o.castShadow=o.receiveShadow=true;}});
+  g.traverse(o=>{ if(o.isMesh){ o.castShadow=true; o.receiveShadow=true; } });
   world.add(g);
-  addAABB(-1.9,-1.6,0.9,2.0);
+  addAABB(-1.9,-1.6,1.0,2.1);
   return g;
 }
 const couch = makeCouch();
 
 // Coffee table
 {
-  const tm=new THREE.MeshStandardMaterial({map:texWood,normalMap:texWoodN,roughness:0.45,color:0x6a5038});
-  const top=new THREE.Mesh(new THREE.BoxGeometry(1.2,0.08,0.7),tm); top.position.set(-0.6,0.45,-1.6);
-  top.castShadow=top.receiveShadow=true; world.add(top);
+  const tm = new THREE.MeshStandardMaterial({ map:texWood, normalMap:texWoodN, roughness:0.35, metalness:0.25, color:0x7a5a3a, envMapIntensity:1.0 });
+  const top = new THREE.Mesh(new THREE.BoxGeometry(1.2,0.08,0.7), tm);
+  top.position.set(-0.6,0.45,-1.6); top.castShadow=top.receiveShadow=true; world.add(top);
   for(const [dx,dz] of [[-0.5,-0.28],[0.5,-0.28],[-0.5,0.28],[0.5,0.28]]){
-    const l=new THREE.Mesh(new THREE.BoxGeometry(0.06,0.45,0.06),tm);
+    const l = new THREE.Mesh(new THREE.BoxGeometry(0.06,0.45,0.06), tm);
     l.position.set(-0.6+dx,0.22,-1.6+dz); world.add(l);
   }
   addAABB(-0.6,-1.6,1.2,0.7);
+  // small candle on table
+  const candleBody = new THREE.Mesh(new THREE.CylinderGeometry(0.04,0.04,0.12,12), new THREE.MeshStandardMaterial({ color:0xd8c9a8, roughness:0.8 }));
+  candleBody.position.set(-0.4,0.55,-1.55); world.add(candleBody);
+  const flame = new THREE.Mesh(new THREE.SphereGeometry(0.02,10,8), new THREE.MeshBasicMaterial({ color:0xffb46b }));
+  flame.position.set(-0.4,0.65,-1.55); world.add(flame);
+  const candleLight = new THREE.PointLight(0xffb46b, 2.5, 3.5, 2);
+  candleLight.position.set(-0.4,0.7,-1.55); scene.add(candleLight);
+  window.__candleLight = candleLight;
 }
 
-// Radio — interactive
+// Radio
 const radioGroup = new THREE.Group();
 {
-  const rm=new THREE.MeshStandardMaterial({color:0x2a221a,roughness:0.5,metalness:0.3});
-  const body=new THREE.Mesh(new THREE.BoxGeometry(0.5,0.3,0.22),rm); body.castShadow=true;
-  const dialMat=new THREE.MeshStandardMaterial({color:0x332a1e,roughness:0.6});
-  const dial=new THREE.Mesh(new THREE.CylinderGeometry(0.04,0.04,0.03,12),dialMat); dial.rotation.x=Math.PI/2; dial.position.set(0.15,0,0.12);
-  const dial2=dial.clone(); dial2.position.set(-0.15,0,0.12);
-  const grille=new THREE.Mesh(new THREE.PlaneGeometry(0.3,0.2), new THREE.MeshStandardMaterial({color:0x1a1410,roughness:1}));
+  const rm = new THREE.MeshStandardMaterial({ color:0x3a2e22, roughness:0.4, metalness:0.4, envMapIntensity:1.2 });
+  const body = new THREE.Mesh(new THREE.BoxGeometry(0.5,0.3,0.22), rm); body.castShadow=true;
+  const dialMat = new THREE.MeshStandardMaterial({ color:0x8a7040, roughness:0.3, metalness:0.8 });
+  const dial = new THREE.Mesh(new THREE.CylinderGeometry(0.04,0.04,0.03,16), dialMat); dial.rotation.x=Math.PI/2; dial.position.set(0.15,0,0.12);
+  const dial2 = dial.clone(); dial2.position.set(-0.15,0,0.12);
+  const grille = new THREE.Mesh(new THREE.PlaneGeometry(0.3,0.2), new THREE.MeshStandardMaterial({ color:0x1a1410, roughness:1 }));
   grille.position.set(-0.05,0,0.115);
-  const led=new THREE.Mesh(new THREE.SphereGeometry(0.02,10,8), new THREE.MeshBasicMaterial({color:0xff5522}));
+  const led = new THREE.Mesh(new THREE.SphereGeometry(0.02,10,8), new THREE.MeshBasicMaterial({ color:0x441008 }));
   led.position.set(0.2,0.09,0.12);
   radioGroup.add(body,dial,dial2,grille,led);
   radioGroup.position.set(-0.6,0.52,-1.6);
   world.add(radioGroup);
-  window.__radioLed=led;
-  window.__radioDial=dial;
+  window.__radioLed = led;
 }
 
-// Clock on wall — interactive, always 3:00
+// Wall clock
 const clockGroup = new THREE.Group();
 {
-  const fm=new THREE.MeshStandardMaterial({color:0x2a211a,roughness:0.6,metalness:0.2});
-  const face=new THREE.Mesh(new THREE.CircleGeometry(0.28,40), new THREE.MeshStandardMaterial({color:0x14100c,roughness:0.4}));
-  face.position.z=0.02;
-  const ring=new THREE.Mesh(new THREE.TorusGeometry(0.28,0.02,10,40), fm); ring.position.z=0.02;
-  const hourHand=new THREE.Mesh(new THREE.BoxGeometry(0.02,0.14,0.006), new THREE.MeshStandardMaterial({color:0xe8dcc0}));
-  hourHand.position.set(0,0.05,0.03);
-  const minHand=new THREE.Mesh(new THREE.BoxGeometry(0.014,0.2,0.006), new THREE.MeshStandardMaterial({color:0xe8dcc0}));
-  minHand.position.set(0,0.08,0.035);
-  // 3:00 → hour at 3 o'clock (right), minute at 12
-  hourHand.rotation.z = -Math.PI/2; hourHand.position.set(0.05,0,0.03);
-  minHand.rotation.z=0; minHand.position.set(0,0.08,0.03);
+  const fm = new THREE.MeshStandardMaterial({ color:0x3a2a1c, roughness:0.5, metalness:0.4 });
+  const face = new THREE.Mesh(new THREE.CircleGeometry(0.28,40), new THREE.MeshStandardMaterial({ color:0xe8dcc0, roughness:0.4 }));
+  face.position.z = 0.02;
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(0.28,0.025,12,40), fm); ring.position.z=0.02;
+  const hourHand = new THREE.Mesh(new THREE.BoxGeometry(0.02,0.14,0.006), new THREE.MeshStandardMaterial({ color:0x1a1410 }));
+  hourHand.rotation.z = -Math.PI/2; hourHand.position.set(0.05,0,0.035);
+  const minHand = new THREE.Mesh(new THREE.BoxGeometry(0.014,0.2,0.006), new THREE.MeshStandardMaterial({ color:0x1a1410 }));
+  minHand.position.set(0,0.08,0.04);
   clockGroup.add(face,ring,hourHand,minHand);
-  clockGroup.position.set(2.9,2.1,-1.5); clockGroup.rotation.y=-Math.PI/2;
+  clockGroup.position.set(2.85,2.1,-1.5); clockGroup.rotation.y = -Math.PI/2;
   world.add(clockGroup);
+  // faint light on clock face (so it's readable)
+  const clockLight = new THREE.PointLight(0xffcf8a, 0.8, 2.0, 2);
+  clockLight.position.set(2.4,2.1,-1.5); scene.add(clockLight);
 }
 
-// Kettle (interactive, hums when on)
+// Kettle on a shelf
 const kettleGroup = new THREE.Group();
 {
-  const km=new THREE.MeshStandardMaterial({color:0x8a3a1e,roughness:0.35,metalness:0.5});
-  const body=new THREE.Mesh(new THREE.CylinderGeometry(0.14,0.16,0.22,20),km); body.castShadow=true;
-  const lid=new THREE.Mesh(new THREE.ConeGeometry(0.12,0.06,20),km); lid.position.y=0.14;
-  const handle=new THREE.Mesh(new THREE.TorusGeometry(0.08,0.012,8,16,Math.PI),km); handle.rotation.z=Math.PI; handle.position.y=0.2;
+  const km = new THREE.MeshStandardMaterial({ color:0xb04824, roughness:0.3, metalness:0.6, envMapIntensity:1.4 });
+  const body = new THREE.Mesh(new THREE.CylinderGeometry(0.14,0.16,0.22,20), km); body.castShadow=true;
+  const lid = new THREE.Mesh(new THREE.ConeGeometry(0.12,0.06,20), km); lid.position.y=0.14;
+  const handle = new THREE.Mesh(new THREE.TorusGeometry(0.08,0.012,8,16,Math.PI), km); handle.rotation.z=Math.PI; handle.position.y=0.2;
   kettleGroup.add(body,lid,handle);
-  kettleGroup.position.set(1.4,0.75,1.4);
-  // small shelf
-  const shelf=new THREE.Mesh(new THREE.BoxGeometry(0.6,0.05,0.4), new THREE.MeshStandardMaterial({map:texWood,normalMap:texWoodN,roughness:0.7,color:0x4a3524}));
+  kettleGroup.position.set(1.4,0.78,1.4);
+  const shelf = new THREE.Mesh(new THREE.BoxGeometry(0.6,0.05,0.4), new THREE.MeshStandardMaterial({ map:texWood, normalMap:texWoodN, roughness:0.7, color:0x5a4028 }));
   shelf.position.set(1.4,0.7,1.4); shelf.castShadow=shelf.receiveShadow=true; world.add(shelf);
   world.add(kettleGroup);
 }
 
-// Cat — cozy, sits on couch
+// Cat on couch
 const catGroup = new THREE.Group();
 {
-  const cm=new THREE.MeshStandardMaterial({color:0x1a1510,roughness:0.95});
-  const body=new THREE.Mesh(new THREE.SphereGeometry(0.16,16,12),cm); body.scale.set(1,0.8,1.4); body.position.y=0.1;
-  const head=new THREE.Mesh(new THREE.SphereGeometry(0.1,16,12),cm); head.position.set(0,0.2,0.14);
-  const earL=new THREE.Mesh(new THREE.ConeGeometry(0.035,0.08,8),cm); earL.position.set(-0.06,0.28,0.14);
-  const earR=earL.clone(); earR.position.x=0.06;
-  const tail=new THREE.Mesh(new THREE.CylinderGeometry(0.02,0.02,0.24,8),cm);
-  tail.position.set(0,0.08,-0.22); tail.rotation.x=Math.PI/2.5;
-  const eyeMat=new THREE.MeshBasicMaterial({color:0xd8b46a});
-  const eyeL=new THREE.Mesh(new THREE.SphereGeometry(0.014,8,8),eyeMat); eyeL.position.set(-0.035,0.2,0.22);
-  const eyeR=new THREE.Mesh(new THREE.SphereGeometry(0.014,8,8),eyeMat); eyeR.position.set(0.035,0.2,0.22);
+  const cm = new THREE.MeshStandardMaterial({ color:0x2a1e16, roughness:0.95 });
+  const body = new THREE.Mesh(new THREE.SphereGeometry(0.16,16,12), cm); body.scale.set(1,0.8,1.4); body.position.y=0.1;
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.1,16,12), cm); head.position.set(0,0.2,0.14);
+  const earL = new THREE.Mesh(new THREE.ConeGeometry(0.035,0.08,8), cm); earL.position.set(-0.06,0.28,0.14);
+  const earR = earL.clone(); earR.position.x=0.06;
+  const tail = new THREE.Mesh(new THREE.CylinderGeometry(0.02,0.02,0.24,8), cm); tail.position.set(0,0.08,-0.22); tail.rotation.x=Math.PI/2.5;
+  const eyeMat = new THREE.MeshBasicMaterial({ color:0xe8c060 });
+  const eyeL = new THREE.Mesh(new THREE.SphereGeometry(0.014,8,8), eyeMat); eyeL.position.set(-0.035,0.2,0.22);
+  const eyeR = new THREE.Mesh(new THREE.SphereGeometry(0.014,8,8), eyeMat); eyeR.position.set(0.035,0.2,0.22);
   catGroup.add(body,head,earL,earR,tail,eyeL,eyeR);
-  catGroup.position.set(-1.85,0.65,-1.6);
+  catGroup.position.set(-1.85,0.68,-1.6);
   catGroup.rotation.y = -Math.PI/2;
-  catGroup.traverse(o=>{if(o.isMesh) o.castShadow=true;});
+  catGroup.traverse(o=>{ if(o.isMesh) o.castShadow=true; });
   world.add(catGroup);
-  window.__cat=catGroup;
 }
 
 // Letter under door
 const letterGroup = new THREE.Group();
 {
-  const lm=new THREE.MeshStandardMaterial({color:0xd8c9a8,roughness:0.9});
-  const letter=new THREE.Mesh(new THREE.PlaneGeometry(0.22,0.15),lm); letter.rotation.x=-Math.PI/2; letter.position.y=0.01;
+  const lm = new THREE.MeshStandardMaterial({ color:0xe8dcc0, roughness:0.9 });
+  const letter = new THREE.Mesh(new THREE.PlaneGeometry(0.22,0.15), lm);
+  letter.rotation.x = -Math.PI/2; letter.position.y = 0.012;
   letterGroup.add(letter);
   letterGroup.position.set(2.7,0.02,0.3);
   world.add(letterGroup);
 }
-// Photo frame on wall
+
+// Picture frame on wall
 {
-  const pm=new THREE.MeshStandardMaterial({map:texWood,roughness:0.6,color:0x3a2a1c});
-  const frame=new THREE.Mesh(new THREE.BoxGeometry(0.3,0.4,0.02),pm);
-  frame.position.set(-2.95,1.7,-0.8); frame.rotation.y=Math.PI/2;
-  const pic=new THREE.Mesh(new THREE.PlaneGeometry(0.24,0.34), new THREE.MeshStandardMaterial({color:0x2a1a10,roughness:0.8}));
-  pic.position.set(-2.93,1.7,-0.8); pic.rotation.y=Math.PI/2;
+  const pm = new THREE.MeshStandardMaterial({ map:texWood, roughness:0.5, metalness:0.1, color:0x4a3020 });
+  const frame = new THREE.Mesh(new THREE.BoxGeometry(0.32,0.42,0.03), pm);
+  frame.position.set(-2.95,1.7,-0.8); frame.rotation.y = Math.PI/2;
+  const pic = new THREE.Mesh(new THREE.PlaneGeometry(0.24,0.34), new THREE.MeshStandardMaterial({ color:0x2a1a10, roughness:0.9 }));
+  pic.position.set(-2.93,1.7,-0.8); pic.rotation.y = Math.PI/2;
   world.add(frame,pic);
 }
 
-/* ============================ HALLWAY LOOP ============================ */
-// The hallway is a separate spatial region reachable through the door
-// We use a "loop" via teleporting: exit door → hallway scene (new scene group)
-// Simpler: build hallway as adjacent group to the +x side, far away so it's a separate area.
-const hallway = new THREE.Group();
-hallway.position.set(0,0,0);
-scene.add(hallway); // same world but placed far so we can teleport
+/* ============================ LIGHTING (APARTMENT) ============================ */
+// Pendant lamp — main warm light
+const pendantLight = new THREE.PointLight(0xffb060, 22, 10, 1.8);
+pendantLight.position.set(0,2.3,0);
+pendantLight.castShadow = true;
+pendantLight.shadow.mapSize.set(1024,1024);
+pendantLight.shadow.bias = -0.0015;
+pendantLight.shadow.camera.near = 0.1;
+pendantLight.shadow.camera.far = 12;
+scene.add(pendantLight);
 
-// Actually let's place it far away in X (x=100) so the two "rooms" are distinct spaces
-hallway.position.set(100,0,0);
-const HW = {x:100, z:0}; // world origin of hallway
-
-// Build hallway: corridor along Z, 6 doors on left (x = -2)
-const hallW = 4; const hallL = 22; const hallH = 3;
+// Lamp shade (wood/bronze)
 {
-  const floor = new THREE.Mesh(new THREE.PlaneGeometry(hallW,hallL), matFloor.clone());
-  floor.rotation.x=-Math.PI/2; floor.position.set(HW.x,0,0); floor.receiveShadow=true; world.add(floor);
-  const ceil = new THREE.Mesh(new THREE.PlaneGeometry(hallW,hallL), matCeil.clone());
-  ceil.rotation.x=Math.PI/2; ceil.position.set(HW.x,hallH,0); ceil.receiveShadow=true; world.add(ceil);
-  // side walls
-  const lw = new THREE.Mesh(new THREE.BoxGeometry(0.2,hallH,hallL), matConcrete.clone());
+  const shadeMat = new THREE.MeshStandardMaterial({ color:0x4a3828, roughness:0.6, metalness:0.5, side:THREE.DoubleSide, envMapIntensity:1.2 });
+  const shade = new THREE.Mesh(new THREE.ConeGeometry(0.35,0.4,24,1,true), shadeMat);
+  shade.position.set(0,2.5,0); shade.rotation.x = Math.PI;
+  shade.castShadow = true;
+  world.add(shade);
+  const cord = new THREE.Mesh(new THREE.CylinderGeometry(0.008,0.008,0.3,6), new THREE.MeshStandardMaterial({ color:0x1a1410 }));
+  cord.position.set(0,2.8,0); world.add(cord);
+  const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.07,16,12), new THREE.MeshBasicMaterial({ color:0xffd8a0 }));
+  bulb.position.set(0,2.32,0); world.add(bulb);
+}
+
+// Ambient fill — cold from window, warm from lamp
+const hemi = new THREE.HemisphereLight(0x2a3444, 0x1a1410, 0.35);
+scene.add(hemi);
+
+// Soft bounce light from window
+const windowFill = new THREE.DirectionalLight(0x6a88b8, 0.6);
+windowFill.position.set(0, 3, -6);
+windowFill.target.position.set(0, 1, 0);
+scene.add(windowFill, windowFill.target);
+
+/* ============================ HALLWAY ============================ */
+const HW = { x:100, z:0 };
+const hallW = 4, hallL = 24, hallH = 3.0;
+const hallway = new THREE.Group();
+
+{
+  // Floor (glossier in hallway — wet)
+  const hallFloorMat = matFloor.clone();
+  hallFloorMat.roughness = 0.35;
+  hallFloorMat.metalness = 0.35;
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(hallW, hallL), hallFloorMat);
+  floor.rotation.x = -Math.PI/2; floor.position.set(HW.x,0,0); floor.receiveShadow = true; world.add(floor);
+
+  const ceilMat = new THREE.MeshStandardMaterial({ color:0x1a1612, roughness:0.95 });
+  const ceil = new THREE.Mesh(new THREE.PlaneGeometry(hallW, hallL), ceilMat);
+  ceil.rotation.x = Math.PI/2; ceil.position.set(HW.x,hallH,0); ceil.receiveShadow = true; world.add(ceil);
+
+  // Side walls
+  const lwMat = matConcrete.clone();
+  const lw = new THREE.Mesh(new THREE.BoxGeometry(0.2,hallH,hallL), lwMat);
   lw.position.set(HW.x-hallW/2,hallH/2,0); lw.castShadow=lw.receiveShadow=true; world.add(lw);
-  const rw = lw.clone(); rw.position.x=HW.x+hallW/2; world.add(rw);
-  // end walls
-  const ewN = new THREE.Mesh(new THREE.BoxGeometry(hallW,hallH,0.2), matConcrete.clone());
-  ewN.position.set(HW.x,hallH/2,-hallL/2); world.add(ewN);
-  const ewS = ewN.clone(); ewS.position.z=hallL/2; world.add(ewS);
+  const rw = lw.clone(); rw.position.x = HW.x+hallW/2; world.add(rw);
+
+  // End walls
+  const ewN = new THREE.Mesh(new THREE.BoxGeometry(hallW,hallH,0.2), lwMat);
+  ewN.position.set(HW.x,hallH/2,-hallL/2); ewN.receiveShadow=true; world.add(ewN);
+  const ewS = ewN.clone(); ewS.position.z = hallL/2; world.add(ewS);
+
+  // Baseboards in hallway
+  const bm = new THREE.MeshStandardMaterial({ color:0x2a2016, roughness:0.8 });
+  const b1 = new THREE.Mesh(new THREE.BoxGeometry(0.05,0.15,hallL), bm);
+  b1.position.set(HW.x-hallW/2+0.13,0.075,0); world.add(b1);
+  const b2 = b1.clone(); b2.position.x = HW.x+hallW/2-0.13; world.add(b2);
+
   addAABB(HW.x-hallW/2, 0, 0.2, hallL);
   addAABB(HW.x+hallW/2, 0, 0.2, hallL);
 }
 
-// Doors along left wall (x = HW.x - hallW/2 + 0.1)
+// Doors along left wall — with glowing number plaques
 const hallDoors = [];
-const doorPositions = [-7, -4, -1, 2, 5, 8]; // z positions of 6 doors
-doorPositions.forEach((z,i)=>{
+const doorPositions = [-9, -6, -3, 0, 3, 6, 9]; // 7 positions but we'll use 6 (skip index based on loop)
+const doorLabels = ['5A','5B','5C','5D','5E','5F'];
+
+doorPositions.slice(0,6).forEach((z,i)=>{
   const g = new THREE.Group();
-  const dm = new THREE.MeshStandardMaterial({map:texWood.clone(),normalMap:texWoodN.clone(),roughness:0.6,color:0x4a3524});
+  const dm = new THREE.MeshStandardMaterial({
+    map:texWood.clone(), normalMap:texWoodN.clone(), roughness:0.55, metalness:0.12, color:0x4a3524
+  });
   const slab = new THREE.Mesh(new THREE.BoxGeometry(0.08,2.15,1.1), dm);
   slab.position.set(HW.x-hallW/2+0.06, 1.1, z);
-  slab.castShadow=true; world.add(slab);
-  // frame
-  const fm = new THREE.MeshStandardMaterial({color:0x2a211a,roughness:0.7});
-  const postL=new THREE.Mesh(new THREE.BoxGeometry(0.12,2.3,0.1),fm); postL.position.set(HW.x-hallW/2+0.06,1.15,z+0.55);
-  const postR=postL.clone(); postR.position.z=z-0.55;
-  const topF=new THREE.Mesh(new THREE.BoxGeometry(0.12,0.12,1.2),fm); topF.position.set(HW.x-hallW/2+0.06,2.25,z);
+  slab.castShadow = slab.receiveShadow = true;
+  world.add(slab);
+  // Frame
+  const fm = new THREE.MeshStandardMaterial({ color:0x2a2016, roughness:0.6 });
+  const postL = new THREE.Mesh(new THREE.BoxGeometry(0.14,2.3,0.12), fm); postL.position.set(HW.x-hallW/2+0.06,1.15,z+0.55);
+  const postR = postL.clone(); postR.position.z = z-0.55;
+  const topF = new THREE.Mesh(new THREE.BoxGeometry(0.14,0.14,1.22), fm); topF.position.set(HW.x-hallW/2+0.06,2.25,z);
   world.add(postL,postR,topF);
-  // doormat
-  const mat = new THREE.Mesh(new THREE.PlaneGeometry(0.7,0.35), new THREE.MeshStandardMaterial({color:0x2a1e14,roughness:1}));
-  mat.rotation.x=-Math.PI/2; mat.position.set(HW.x-hallW/2+0.45,0.01,z); world.add(mat);
-  // number plaque
-  const plaqueMat = new THREE.MeshStandardMaterial({color:0x8a7d63,roughness:0.5,metalness:0.4});
-  const plaque = new THREE.Mesh(new THREE.BoxGeometry(0.02,0.12,0.14), plaqueMat);
-  plaque.position.set(HW.x-hallW/2+0.13,1.6,z);
+  // Glowing number plaque
+  const plaqueCanvas = document.createElement('canvas'); plaqueCanvas.width=128; plaqueCanvas.height=128;
+  const pctx = plaqueCanvas.getContext('2d');
+  pctx.fillStyle='#1a1410'; pctx.fillRect(0,0,128,128);
+  pctx.strokeStyle='#8a6a40'; pctx.lineWidth=4; pctx.strokeRect(4,4,120,120);
+  pctx.fillStyle='#ffdca0'; pctx.font='bold 48px Courier New'; pctx.textAlign='center'; pctx.textBaseline='middle';
+  pctx.fillText(doorLabels[i], 64, 68);
+  const plaqueTex = new THREE.CanvasTexture(plaqueCanvas);
+  plaqueTex.colorSpace = THREE.SRGBColorSpace;
+  const plaqueMat = new THREE.MeshStandardMaterial({
+    map:plaqueTex, emissive:0xffb46b, emissiveMap:plaqueTex, emissiveIntensity:0.9,
+    roughness:0.5, metalness:0.3
+  });
+  const plaque = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.18, 0.24), plaqueMat);
+  plaque.position.set(HW.x-hallW/2+0.11, 1.75, z);
+  plaque.castShadow = false;
   world.add(plaque);
-  hallDoors.push({z, slab, plaque, index:i, id:`door_${i}`});
+  // Doormat
+  const matMat = new THREE.MeshStandardMaterial({ color:0x3a2418, roughness:1 });
+  const mat = new THREE.Mesh(new THREE.PlaneGeometry(0.8,0.4), matMat);
+  mat.rotation.x = -Math.PI/2; mat.position.set(HW.x-hallW/2+0.5,0.005,z); world.add(mat);
+  // Knob
+  const knobMat = new THREE.MeshStandardMaterial({ color:0xc8a868, metalness:1.0, roughness:0.2, envMapIntensity:1.4 });
+  const knob = new THREE.Mesh(new THREE.SphereGeometry(0.045,16,12), knobMat);
+  knob.position.set(HW.x-hallW/2+0.12, 1.05, z+0.35); world.add(knob);
+  hallDoors.push({z, slab, plaque, index:i, label:doorLabels[i]});
 });
 
-// Hallway lamp (single sodium light, dim, at center)
-const hallLight = new THREE.PointLight(0xffa050, 10, 14, 2);
-hallLight.position.set(HW.x, hallH-0.3, 0);
-hallLight.castShadow=true;
-hallLight.shadow.mapSize.set(512,512);
-hallLight.shadow.bias=-0.001;
-scene.add(hallLight);
-const hallLampMesh = new THREE.Mesh(new THREE.SphereGeometry(0.08,12,10), new THREE.MeshBasicMaterial({color:0xffb46b}));
-hallLampMesh.position.copy(hallLight.position); world.add(hallLampMesh);
-
-// Hallway end mirror (for eerie reflection)
+/* ============================ HALLWAY LIGHTING (the fix) ============================ */
+// 1. Main sodium pool at center
+const hallMain = new THREE.PointLight(0xffa050, 18, 12, 1.8);
+hallMain.position.set(HW.x, hallH-0.4, 0);
+hallMain.castShadow = true;
+hallMain.shadow.mapSize.set(1024,1024);
+hallMain.shadow.bias = -0.0015;
+hallMain.shadow.camera.far = 16;
+scene.add(hallMain);
+// visible bulb
 {
-  const mm = new THREE.Mesh(new THREE.PlaneGeometry(1.2,1.6), new THREE.MeshStandardMaterial({color:0x1a2228,roughness:0.05,metalness:1.0}));
-  mm.position.set(HW.x, 1.4, -hallL/2+0.15); world.add(mm);
+  const b = new THREE.Mesh(new THREE.SphereGeometry(0.1,16,12), new THREE.MeshBasicMaterial({ color:0xffc47a }));
+  b.position.copy(hallMain.position); world.add(b);
+  const shade = new THREE.Mesh(new THREE.ConeGeometry(0.22,0.2,16,1,true),
+    new THREE.MeshStandardMaterial({ color:0x2a2016, roughness:0.7, metalness:0.3, side:THREE.DoubleSide }));
+  shade.position.set(HW.x, hallH-0.3, 0); shade.rotation.x = Math.PI; world.add(shade);
 }
 
-/* ============================ INTERACTABLES SYSTEM ============================ */
-const interactables = []; // {pos, radius, label, action, once}
+// 2. Cool emergency light at far end (north)
+const hallEndN = new THREE.PointLight(0x6a88b8, 8, 10, 2);
+hallEndN.position.set(HW.x, hallH-0.5, -hallL/2 + 1.5);
+scene.add(hallEndN);
+{
+  const b = new THREE.Mesh(new THREE.SphereGeometry(0.08,12,10), new THREE.MeshBasicMaterial({ color:0xaaccff }));
+  b.position.copy(hallEndN.position); world.add(b);
+}
+
+// 3. Cool emergency light at far end (south)
+const hallEndS = new THREE.PointLight(0x6a88b8, 8, 10, 2);
+hallEndS.position.set(HW.x, hallH-0.5, hallL/2 - 1.5);
+scene.add(hallEndS);
+{
+  const b = new THREE.Mesh(new THREE.SphereGeometry(0.08,12,10), new THREE.MeshBasicMaterial({ color:0xaaccff }));
+  b.position.copy(hallEndS.position); world.add(b);
+}
+
+// 4. Wall sconces between doors — small warm points
+for(let i=0;i<6;i++){
+  const z = -9 + i*3 + 1.5;
+  const s = new THREE.PointLight(0xffb060, 4, 5, 2);
+  s.position.set(HW.x-hallW/2+0.4, 2.1, z);
+  scene.add(s);
+  const fixture = new THREE.Mesh(new THREE.CylinderGeometry(0.04,0.06,0.15,12),
+    new THREE.MeshStandardMaterial({ color:0x3a2818, roughness:0.6, metalness:0.4 }));
+  fixture.rotation.z = Math.PI/2; fixture.position.set(HW.x-hallW/2+0.3, 2.1, z); world.add(fixture);
+  const glow = new THREE.Mesh(new THREE.SphereGeometry(0.03,8,8), new THREE.MeshBasicMaterial({ color:0xffd090 }));
+  glow.position.set(HW.x-hallW/2+0.32, 2.1, z); world.add(glow);
+}
+
+// 5. Ambient fill so walls aren't pitch black
+const hallHemi = new THREE.HemisphereLight(0x3a3040, 0x1a1208, 0.55);
+hallHemi.position.set(HW.x, 2, 0);
+scene.add(hallHemi);
+
+// 6. Very soft ambient
+scene.add(new THREE.AmbientLight(0x1a1410, 0.3));
+
+// Hallway end mirror
+{
+  const mm = new THREE.Mesh(new THREE.PlaneGeometry(1.2,1.6), new THREE.MeshStandardMaterial({ color:0x2a3238, roughness:0.1, metalness:1.0, envMapIntensity:1.5 }));
+  mm.position.set(HW.x, 1.4, -hallL/2+0.12); world.add(mm);
+}
+
+/* ============================ INTERACTABLES ============================ */
+const interactables = [];
 function addInteract(pos, radius, label, action, once=true){
   interactables.push({pos:pos.clone(), radius, label, action, once, used:false});
 }
 
-// Radio
 addInteract(radioGroup.position, 0.9, "Turn on the radio", ()=>{
-  state.radioOn=!state.radioOn;
+  state.radioOn = !state.radioOn;
   if(state.radioOn){ audio.radioHum(); window.__radioLed.material.color.setHex(0xff2200); }
-  else { audio.radioStop(); window.__radioLed.material.color.setHex(0x331008); }
+  else { audio.radioStop(); window.__radioLed.material.color.setHex(0x441008); }
   toast(state.radioOn?"The radio hums to life.":"The radio goes quiet.");
-  logAmbience("I turned on the radio. It plays something soft — then cuts out when I look at it.", "radio");
+  logAmbience("I turned on the radio. It plays something soft — then cuts out when I look at it.","radio");
 });
 
-// Clock
 addInteract(clockGroup.position, 0.9, "Look at the clock", ()=>{
   toast("3:00.");
-  if(state.loop>=4) {
-    toast("3:00. The minute hand twitched backward.");
-    logAmbience("The clock ticked backward once. I watched it.", "clock");
-  }
+  if(state.loop>=4) toast("3:00. The minute hand twitched backward.");
 });
 
-// Kettle
-let kettleOn=false;
+let kettleOn = false;
 addInteract(kettleGroup.position, 0.7, "Put the kettle on", ()=>{
-  kettleOn=!kettleOn;
+  kettleOn = !kettleOn;
   if(kettleOn){
     toast("The kettle begins to hum.");
-    logAmbience("The kettle hums. It sounds like a voice, if I don't listen closely.", "kettle");
-    if(!audio.nodes.kettle){
-      // small hum
+    logAmbience("The kettle hums. It sounds like a voice, if I don't listen closely.","kettle");
+    if(!audio.nodes.kettle && audio.ctx){
       const o=audio.ctx.createOscillator(); o.type='sine'; o.frequency.value=220;
       const g=audio.ctx.createGain(); g.gain.value=0;
       o.connect(g).connect(audio.master); o.start();
       g.gain.linearRampToValueAtTime(0.03, audio.ctx.currentTime+1);
-      audio.nodes.kettle=g;
+      audio.nodes.kettle = g;
     }
   } else {
     toast("The kettle goes quiet.");
-    if(audio.nodes.kettle){ audio.nodes.kettle.gain.linearRampToValueAtTime(0,audio.ctx.currentTime+0.4); }
+    if(audio.nodes.kettle) audio.nodes.kettle.gain.linearRampToValueAtTime(0,audio.ctx.currentTime+0.4);
   }
 });
 
-// Cat
 addInteract(catGroup.position, 0.8, "Pet the cat", ()=>{
   toast("The cat purrs. It is definitely just a cat.");
-  logAmbience("I sat with the cat by the window. The rain felt farther away.", "cat");
-  // little purr sound
-  if(audio.ctx&&!audio.muted){
+  logAmbience("I sat with the cat by the window. The rain felt farther away.","cat");
+  if(audio.ctx && !audio.muted){
     const t=audio.ctx.currentTime;
     const o=audio.ctx.createOscillator(); o.type='triangle'; o.frequency.value=55;
     const lfo=audio.ctx.createOscillator(); lfo.frequency.value=6;
     const lg=audio.ctx.createGain(); lg.gain.value=8;
     lfo.connect(lg).connect(o.frequency);
-    const g=audio.ctx.createGain(); g.gain.setValueAtTime(0, t);
-    g.gain.linearRampToValueAtTime(0.05,t+0.1); g.gain.linearRampToValueAtTime(0, t+1.8);
+    const g=audio.ctx.createGain(); g.gain.setValueAtTime(0,t);
+    g.gain.linearRampToValueAtTime(0.05,t+0.1); g.gain.linearRampToValueAtTime(0,t+1.8);
     o.connect(g).connect(audio.master); o.start(t); lfo.start(t); o.stop(t+2); lfo.stop(t+2);
   }
 });
 
-// Couch
 addInteract(new THREE.Vector3(-1.9,0.6,-1.6), 0.9, "Sit on the couch", ()=>{
   toast("You sit. The rain is almost peaceful.");
-  logAmbience("I sat down. For a moment everything felt normal.", "couch");
+  logAmbience("I sat down. For a moment everything felt normal.","couch");
 });
 
-// Letter under door
 addInteract(letterGroup.position, 0.7, "Read the letter", ()=>{
-  if(state.flagged.letterRead){
-    toast("You've already read it. The date has changed.");
-    return;
-  }
-  state.flagged.letterRead=true;
+  if(state.flagged.letterRead){ toast("You've already read it. The date has changed."); return; }
+  state.flagged.letterRead = true;
   state.fragments++;
   toast("A letter. Dated 1987. Addressed to you. It says: 'The door you remember is not the door you need.'");
   logObs("A letter under the door. Dated 1987. Addressed to me.");
-  logAmbience("I heard the letter slide under the door. I didn't hear anyone walk away.", "letter");
+  logAmbience("I heard the letter slide under the door. I didn't hear anyone walk away.","letter");
   checkProgress();
 });
 
-// Window
 addInteract(new THREE.Vector3(0,1.9,-2.9), 1.0, "Look at the rain", ()=>{
   toast("Rain. The city is quiet. The rain is not.");
-  logAmbience("I looked out the window. The rain hasn't stopped. It never stopped.", "window");
+  logAmbience("I looked out the window. The rain hasn't stopped. It never stopped.","window");
 });
 
-// Exit door
-addInteract(doorSlab.position, 0.9, "Open the door", ()=>{
-  enterHallway();
-});
+addInteract(doorGroup.position, 0.9, "Open the door", ()=>enterHallway());
 
-// Hallway doors (added later after we have positions)
-/* We'll attach interactables to each door dynamically */
 hallDoors.forEach((d,i)=>{
-  const pos = new THREE.Vector3(HW.x - hallW/2 + 0.5, 1.1, d.z);
-  addInteract(pos, 1.0, "Inspect door", ()=>{
-    inspectDoor(i);
-  }, false);
+  const pos = new THREE.Vector3(HW.x - hallW/2 + 0.6, 1.1, d.z);
+  addInteract(pos, 1.0, `Inspect door ${d.label}`, ()=>inspectDoor(i), false);
 });
 
 function checkProgress(){
   if(state.fragments>=4 && !state.truth){
-    state.truth=true;
+    state.truth = true;
     toast("You understand now. The fifth door was never yours. The sixth was.");
     logObs("I understand now: the door I keep entering is not the door I need.");
-    logAmbience("The rain stopped for three seconds. In the silence, I heard my own name.", "truth");
+    logAmbience("The rain stopped for three seconds. In the silence, I heard my own name.","truth");
     audio.silenceRain(true);
-    setTimeout(()=>{ audio.silenceRain(false); }, 3200);
-    state.silenceActive=true;
-    state.silenceTimer=3.2;
+    setTimeout(()=>audio.silenceRain(false), 3200);
   }
 }
 
 /* ============================ INTERACTION LOGIC ============================ */
 function inspectDoor(i){
-  const door = hallDoors[i];
-  const trueIdx = (5 + state.loop) % 6; // shifts each loop
-  if(i===trueIdx){
-    // reveal a clue / fragment
+  const trueIdx = (5 + state.loop) % 6;
+  if(i === trueIdx){
     state.fragments++;
     state.loop++;
     if(state.fragments>=4) checkProgress();
-    toast(`Door ${i+1} opens. The room beyond is 5B — but it's changed.`);
-    logObs(`Door ${i+1} was the right door this loop. The room is different now.`);
+    toast(`Door ${hallDoors[i].label} opens. The room beyond is 5B — but it's changed.`);
+    logObs(`Door ${hallDoors[i].label} was the right door this loop. The room is different now.`);
     logAmbience(ambienceLineForLoop(state.loop), "loop"+state.loop);
     state.footstepDelay = Math.min(400, state.footstepDelay+70);
     state.rainInWalls = state.loop>=3;
     state.rainInside = state.loop>=5;
     audio.update(0);
-    // reset hallway state slightly (visual shift)
-    hallDoors.forEach((d,idx)=>{
-      // shift door positions slightly
-      d.slab.position.z = doorPositions[idx] + (Math.random()*0.4-0.2);
-    });
-    // teleport back to apartment
     teleportToApartment();
-    // bump light warmth
-    pendantLight.intensity = Math.max(10, 18 - state.loop*0.8);
+    pendantLight.intensity = Math.max(10, 22 - state.loop*0.8);
   } else {
     toast("Wrong door. The hallway resets.");
-    logObs(`Door ${i+1} wasn't mine. The corridor reset.`);
-    // teleport back to hallway start, loop stays
+    logObs(`Door ${hallDoors[i].label} wasn't mine. The corridor reset.`);
     teleportToHallwayStart();
     audio.tick();
   }
@@ -1301,12 +1199,11 @@ function ambienceLineForLoop(loop){
   return lines[Math.min(loop-1, lines.length-1)];
 }
 
-/* ============================ TELEPORTING ============================ */
 function teleportToHallway(){
   state.playerPos.set(HW.x, 1.6, hallL/2 - 1.5);
-  state.yaw = Math.PI; // facing -Z into hallway
+  state.yaw = Math.PI;
   toast("The hallway.");
-  logAmbience("I stepped into the hallway. It's longer than it should be.", "hall-entry");
+  logAmbience("I stepped into the hallway. It's longer than it should be.","hall-entry");
 }
 function teleportToHallwayStart(){
   state.playerPos.set(HW.x, 1.6, hallL/2 - 1.5);
@@ -1314,27 +1211,25 @@ function teleportToHallwayStart(){
 }
 function teleportToApartment(){
   state.playerPos.set(2.3, 1.6, 0);
-  state.yaw = Math.PI/2; // facing into apartment (-X)
-  state.roomName="5B";
+  state.yaw = Math.PI/2;
+  state.roomName = "5B";
 }
 function enterHallway(){
+  if(state.truth){ triggerEnding(); return; }
   teleportToHallway();
 }
 
-/* ============================ JOURNAL UI ============================ */
+/* ============================ JOURNAL ============================ */
 const journalEl = document.getElementById('journal');
 const obsListEl = document.getElementById('obsList');
 const ambListEl = document.getElementById('ambList');
 const photoListEl = document.getElementById('photoList');
 
-function logObs(text){
-  state.observations.push({text, time: state.clockHud});
-  renderJournal();
-}
+function logObs(text){ state.observations.push({text, time:state.clockHud}); renderJournal(); }
 function logAmbience(text, key){
   if(key && state.flagged["amb_"+key]) return;
-  if(key) state.flagged["amb_"+key]=true;
-  state.ambienceLog.push({text, time: state.clockHud});
+  if(key) state.flagged["amb_"+key] = true;
+  state.ambienceLog.push({text, time:state.clockHud});
   renderJournal();
   toast(text);
 }
@@ -1349,7 +1244,6 @@ function renderJournal(){
     ? state.photos.map(p=>`<div class="postcard"><img src="${p.img}"><div class="cap">${p.caption}</div></div>`).join('')
     : '<div class="empty">— no photographs yet —</div>';
 }
-
 function toggleJournal(){
   state.journalOpen = !state.journalOpen;
   journalEl.classList.toggle('open', state.journalOpen);
@@ -1358,7 +1252,7 @@ function toggleJournal(){
 
 /* ============================ TOAST ============================ */
 const toastEl = document.getElementById('toast');
-let toastTimer=null;
+let toastTimer = null;
 function toast(msg){
   toastEl.textContent = msg;
   toastEl.classList.add('show');
@@ -1366,36 +1260,33 @@ function toast(msg){
   toastTimer = setTimeout(()=>toastEl.classList.remove('show'), 2600);
 }
 
-/* ============================ PLAYER CONTROLS ============================ */
+/* ============================ CONTROLS ============================ */
 const keys = {};
 window.addEventListener('keydown', e=>{
-  keys[e.code]=true;
+  keys[e.code] = true;
   if(e.code==='KeyJ') toggleJournal();
   if(e.code==='KeyM'){ state.muted=!state.muted; audio.setMuted(state.muted); toast(state.muted?"Muted.":"Sound on."); }
   if(e.code==='KeyC') takeSnapshot();
   if(e.code==='KeyE') tryInteract();
-  if(e.code==='Escape'){ toggleMenu(); }
-  if(e.code==='KeyR' && state.ending){ location.reload(); }
+  if(e.code==='Escape') toggleMenu();
+  if(e.code==='KeyR' && state.ending) location.reload();
 });
-window.addEventListener('keyup', e=>{ keys[e.code]=false; });
+window.addEventListener('keyup', e=>{ keys[e.code] = false; });
 
-// mouse look
-let mouseDown=false;
-let lastX=0,lastY=0;
+let mouseDown = false, lastX=0, lastY=0;
 renderer.domElement.addEventListener('mousedown', e=>{ mouseDown=true; lastX=e.clientX; lastY=e.clientY; });
 window.addEventListener('mouseup', ()=>mouseDown=false);
 window.addEventListener('mousemove', e=>{
   if(!mouseDown || state.journalOpen || state.paused) return;
   const dx = e.clientX-lastX, dy = e.clientY-lastY;
-  lastX=e.clientX; lastY=e.clientY;
+  lastX = e.clientX; lastY = e.clientY;
   state.yaw -= dx*0.003;
   state.pitch -= dy*0.003;
   state.pitch = Math.max(-1.2, Math.min(1.2, state.pitch));
 });
 
-// touch controls
-let touchMove={active:false,id:null,sx:0,sy:0,x:0,y:0};
-let touchLook={active:false,id:null,sx:0,sy:0,x:0,y:0};
+let touchMove = {active:false,id:null,sx:0,sy:0,x:0,y:0};
+let touchLook = {active:false,id:null,sx:0,sy:0,x:0,y:0};
 function setupTouch(){
   const stickMove = document.getElementById('stickMove');
   const knobMove = document.getElementById('knobMove');
@@ -1409,33 +1300,26 @@ function setupTouch(){
       const rect = el.getBoundingClientRect();
       t.sx = rect.left + rect.width/2; t.sy = rect.top + rect.height/2;
       t.x=0; t.y=0;
-    }, {passive:false});
+    },{passive:false});
     el.addEventListener('touchmove', e=>{
       e.preventDefault();
       for(const touch of e.changedTouches){
         if(touch.identifier===t.id){
-          const dx = touch.clientX - t.sx;
-          const dy = touch.clientY - t.sy;
-          const r = 50;
-          const len = Math.hypot(dx,dy);
-          const f = Math.min(1, r/len);
+          const dx = touch.clientX - t.sx, dy = touch.clientY - t.sy;
+          const r = 50, len = Math.hypot(dx,dy), f = Math.min(1, r/len);
           t.x = dx*f/50; t.y = dy*f/50;
           knob.style.transform = `translate(${dx*f}px,${dy*f}px)`;
         }
       }
-    }, {passive:false});
+    },{passive:false});
     el.addEventListener('touchend', e=>{
       for(const touch of e.changedTouches){
-        if(touch.identifier===t.id){
-          t.active=false; t.id=null; t.x=0; t.y=0;
-          knob.style.transform='';
-        }
+        if(touch.identifier===t.id){ t.active=false; t.id=null; t.x=0; t.y=0; knob.style.transform=''; }
       }
     });
   }
   bind(stickMove, knobMove, touchMove);
   bind(stickLook, knobLook, touchLook);
-
   document.getElementById('btnE').addEventListener('click', ()=>tryInteract());
   document.getElementById('btnC').addEventListener('click', ()=>takeSnapshot());
   document.getElementById('btnJ').addEventListener('click', ()=>toggleJournal());
@@ -1448,33 +1332,25 @@ const promptEl = document.getElementById('prompt');
 let hoveredInteractable = null;
 function updateInteraction(){
   const eye = state.playerPos;
-  const dir = new THREE.Vector3(
-    Math.sin(state.yaw)*Math.cos(state.pitch),
-    Math.sin(state.pitch),
-    Math.cos(state.yaw)*Math.cos(state.pitch)
-  ).normalize().negate(); // forward
-  // camera forward in our yaw convention
   const forward = new THREE.Vector3(-Math.sin(state.yaw)*Math.cos(state.pitch), Math.sin(state.pitch), -Math.cos(state.yaw)*Math.cos(state.pitch));
-  hoveredInteractable=null;
-  let best=Infinity;
+  hoveredInteractable = null;
+  let best = Infinity;
   for(const it of interactables){
     const d = eye.distanceTo(it.pos);
-    if(d>2.2) continue;
+    if(d > 2.4) continue;
     const to = it.pos.clone().sub(eye).normalize();
     const dot = to.dot(forward);
-    if(dot>0.6 && d<best){ best=d; hoveredInteractable=it; }
+    if(dot > 0.6 && d < best){ best = d; hoveredInteractable = it; }
   }
   if(hoveredInteractable){
     promptEl.textContent = `[E] ${hoveredInteractable.label}`;
     promptEl.classList.add('show');
-  } else {
-    promptEl.classList.remove('show');
-  }
+  } else promptEl.classList.remove('show');
 }
 function tryInteract(){
   if(!hoveredInteractable) return;
   if(hoveredInteractable.once && hoveredInteractable.used) return;
-  hoveredInteractable.used=true;
+  hoveredInteractable.used = true;
   hoveredInteractable.action();
   audio.uiClick();
 }
@@ -1484,12 +1360,10 @@ const flashEl = document.getElementById('flash');
 function takeSnapshot(){
   if(!state.running) return;
   audio.shutter();
-  flashEl.style.opacity='1';
+  flashEl.style.opacity = '1';
   setTimeout(()=>flashEl.style.opacity='0', 90);
-  // render current frame to canvas (with slight sepia applied by CSS later)
   composer.render();
   const data = renderer.domElement.toDataURL('image/jpeg',0.7);
-  // derive a "wrong" caption — what you expected vs. what might be there
   const captions = [
     "3:00. The hallway looked empty.",
     "Just rain. I'm sure of it.",
@@ -1502,18 +1376,13 @@ function takeSnapshot(){
   const caption = captions[Math.floor(Math.random()*captions.length)];
   state.photos.push({img:data, caption});
   toast("Snapshot saved to your notebook.");
-  logAmbience("I took a photograph. Something in it doesn't match what I saw.", "photo"+state.photos.length);
+  logAmbience("I took a photograph. Something in it doesn't match what I saw.","photo"+state.photos.length);
 }
 
 /* ============================ MENU ============================ */
 const menuEl = document.getElementById('menu');
-function toggleMenu(){
-  state.paused = !state.paused;
-  menuEl.classList.toggle('open', state.paused);
-}
-document.getElementById('btnMute').addEventListener('click', ()=>{
-  state.muted=!state.muted; audio.setMuted(state.muted); toast(state.muted?"Muted.":"Sound on.");
-});
+function toggleMenu(){ state.paused = !state.paused; menuEl.classList.toggle('open', state.paused); }
+document.getElementById('btnMute').addEventListener('click', ()=>{ state.muted=!state.muted; audio.setMuted(state.muted); toast(state.muted?"Muted.":"Sound on."); });
 document.getElementById('btnResume').addEventListener('click', ()=>toggleMenu());
 document.getElementById('optAmb').addEventListener('click', e=>{
   if(!e.target.dataset.v) return;
@@ -1526,66 +1395,42 @@ document.getElementById('optScare').addEventListener('click', e=>{
   if(!e.target.dataset.v) return;
   [...e.currentTarget.children].forEach(c=>c.classList.remove('on'));
   e.target.classList.add('on');
-  state.scareTense = e.target.dataset.v==='1';
-  if(state.scareTense) spawnEdgeFigure();
+  state.scareTense = e.target.dataset.v === '1';
 });
 
-/* ============================ EDGE-OF-VISION FIGURE (Tense mode) ============================ */
-let edgeFigure=null;
+/* ============================ EDGE FIGURE ============================ */
+let edgeFigure = null;
 function spawnEdgeFigure(){
   if(edgeFigure) return;
   const g = new THREE.Group();
   const mat = new THREE.MeshStandardMaterial({color:0x0a0806, roughness:1});
-  const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.25,1.2,4,12), mat);
-  body.position.y=0.9;
-  const head = new THREE.Mesh(new THREE.SphereGeometry(0.18,12,10), mat);
-  head.position.y=1.75;
-  g.add(body,head);
-  g.position.set(HW.x, 0, -hallL/2+1);
-  g.visible=false;
-  scene.add(g);
-  edgeFigure=g;
+  const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.25,1.2,4,12), mat); body.position.y = 0.9;
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.18,12,10), mat); head.position.y = 1.75;
+  g.add(body,head); g.position.set(HW.x, 0, -hallL/2+1.5); g.visible = false;
+  scene.add(g); edgeFigure = g;
 }
 function tryEdgeFigure(){
   if(!state.scareTense || !edgeFigure) return;
-  // show at hallway end, only when player is in hallway and looking mostly away
-  const inHall = state.playerPos.x > HW.x-8;
+  const inHall = state.playerPos.x > HW.x-10;
   if(inHall && Math.random()<0.002){
-    edgeFigure.visible=true;
-    setTimeout(()=>{ edgeFigure.visible=false; }, 900);
+    edgeFigure.visible = true;
+    setTimeout(()=>{ edgeFigure.visible = false; }, 900);
   }
 }
 
-/* ============================ LOOP / END ============================ */
-function maybeEnd(){
-  if(state.truth && !state.ending){
-    // if player opens door while truth known → end
-    // handled in enterHallway → check
-  }
-}
-// override enterHallway when truth reached
-const originalEnterHallway = enterHallway;
-enterHallway = function(){
-  if(state.truth){
-    triggerEnding();
-    return;
-  }
-  originalEnterHallway();
-};
+/* ============================ ENDING ============================ */
 function triggerEnding(){
-  state.ending=true;
+  state.ending = true;
   document.getElementById('ending').classList.add('show');
   audio.silenceRain(true);
-  setTimeout(()=>{ audio.silenceRain(false); }, 8000);
+  setTimeout(()=>audio.silenceRain(false), 8000);
 }
 
 /* ============================ COLLISION ============================ */
-function collide(pos, prev){
-  const r=0.32;
+function collide(pos){
+  const r = 0.32;
   for(const c of colliders){
-    // check if inside
-    if(pos.x>c.minX-r && pos.x<c.maxX+r && pos.z>c.minZ-r && pos.z<c.maxZ+r){
-      // resolve by pushing back on smaller penetration axis
+    if(pos.x > c.minX-r && pos.x < c.maxX+r && pos.z > c.minZ-r && pos.z < c.maxZ+r){
       const dx1 = Math.abs(pos.x - (c.minX-r));
       const dx2 = Math.abs((c.maxX+r) - pos.x);
       const dz1 = Math.abs(pos.z - (c.minZ-r));
@@ -1597,7 +1442,6 @@ function collide(pos, prev){
       else pos.z = c.maxZ+r;
     }
   }
-  return pos;
 }
 
 /* ============================ MAIN LOOP ============================ */
@@ -1609,7 +1453,6 @@ function animate(){
   lastT = now;
 
   if(state.running && !state.paused && !state.journalOpen && !state.ending){
-    // movement
     const speed = 2.6;
     const forward = new THREE.Vector3(-Math.sin(state.yaw), 0, -Math.cos(state.yaw));
     const right = new THREE.Vector3(Math.cos(state.yaw), 0, -Math.sin(state.yaw));
@@ -1626,78 +1469,52 @@ function animate(){
     }
     if(move.length()>0){
       move.normalize().multiplyScalar(speed*dt);
-      const prev = state.playerPos.clone();
       state.playerPos.x += move.x;
       state.playerPos.z += move.z;
-      collide(state.playerPos, prev);
-      // footstep sound
+      collide(state.playerPos);
       state.lastFootstep += dt;
-      if(state.lastFootstep>0.45){ state.lastFootstep=0; audio.footstep(); }
-    } else {
-      state.lastFootstep = 0.45;
-    }
+      if(state.lastFootstep > 0.45){ state.lastFootstep = 0; audio.footstep(); }
+    } else state.lastFootstep = 0.45;
 
-    // camera
     camera.position.set(state.playerPos.x, 1.6, state.playerPos.z);
-    camera.rotation.order='YXZ';
+    camera.rotation.order = 'YXZ';
     camera.rotation.y = state.yaw;
     camera.rotation.x = state.pitch;
 
-    // clock hud / time tracking
     state.time += dt;
-
-    // interaction prompt
     updateInteraction();
-
-    // edge figure
     tryEdgeFigure();
 
-    // periodic silent rain beat
-    state.silenceTimer -= dt;
-    if(state.loop>=4 && state.silenceTimer<=0 && !state.silenceActive && Math.random()<0.0015){
-      state.silenceActive=true;
-      audio.silenceRain(true);
-      state.silenceTimer=3.0;
-    }
-    if(state.silenceActive && state.silenceTimer<=0){
-      state.silenceActive=false;
-      audio.silenceRain(false);
-      state.silenceTimer=8+Math.random()*10;
-    }
-
-    // ambience line drops on timer for early loop feel
-    if(!state.flagged["amb_initial"]){ logAmbience("Rain on the window. Pipes settling. The clock ticks.","initial"); }
+    if(!state.flagged["amb_initial"]) logAmbience("Rain on the window. Pipes settling. The clock ticks.","initial");
     if(state.loop>=2 && !state.flagged["amb_l2"]) logAmbience(ambienceLineForLoop(2),"l2");
     if(state.loop>=3 && !state.flagged["amb_l3"]) logAmbience(ambienceLineForLoop(3),"l3");
     if(state.loop>=5 && !state.flagged["amb_l5"]) logAmbience(ambienceLineForLoop(5),"l5");
     if(state.loop>=6 && !state.flagged["amb_l6"]) logAmbience(ambienceLineForLoop(6),"l6");
 
-    // radio "plays when not looking" effect
-    if(state.radioOn && !state.flagged.radioAway){
-      state.flagged.radioAwayTimer = (state.flagged.radioAwayTimer||0) + dt;
-      if(state.flagged.radioAwayTimer>12){
-        state.flagged.radioAway=true;
-        logAmbience("The radio started playing on its own. I wasn't near it.", "radioAway");
-      }
+    if(state.loop>=4 && Math.random()<0.0008 && !state.silenceActive){
+      state.silenceActive = true;
+      audio.silenceRain(true);
+      setTimeout(()=>{ audio.silenceRain(false); state.silenceActive = false; }, 3000);
     }
 
-    // audio update
     audio.update(dt);
 
-    // update glass / city shaders
     if(window.__glass) window.__glass.uniforms.uTime.value += dt;
-    if(window.__city) window.__city.uniforms.uTime.value += dt;
-    if(window.__city) window.__city.uniforms.uRain.value = state.loop>=4?1.4:1.0;
+    if(window.__cityMesh){
+      // subtle sway of city (parallax breathing)
+      window.__cityMesh.position.x = Math.sin(state.time*0.1)*0.1;
+    }
 
-    // gentle cat animation
     if(window.__cat){
       window.__cat.rotation.y += Math.sin(state.time*0.5)*0.0005;
     }
+    if(window.__candleLight){
+      window.__candleLight.intensity = 2.2 + Math.sin(state.time*8)*0.3 + Math.random()*0.2;
+    }
 
-    // lamp flicker in late loops
     if(state.loop>=5){
       const f = 1 - Math.random()*0.15*Math.max(0,(state.loop-4));
-      pendantLight.intensity = Math.max(6, 18 - state.loop*0.8) * (0.85+0.15*f);
+      pendantLight.intensity = Math.max(8, 22 - state.loop*0.8) * (0.85+0.15*f);
     }
   }
 
@@ -1709,32 +1526,31 @@ animate();
 document.getElementById('btnStart').addEventListener('click', ()=>{
   audio.init();
   audio.setLevel(state.ambIntensity);
-  state.running=true;
+  state.running = true;
   document.getElementById('start').style.opacity='0';
   setTimeout(()=>{ document.getElementById('start').style.display='none'; }, 1200);
-  document.getElementById('hud').style.display='block';
+  document.getElementById('hud').style.display = 'block';
   state.playerPos.set(0,1.6,1.5);
   state.yaw = Math.PI;
   toast("You're awake. It's 3:00. Find the door.");
   logObs("I woke up on the floor of my apartment. The clock says 3:00.");
-  logAmbience("Rain on the window. Pipes settling. The clock ticks.", "initial");
+  logAmbience("Rain on the window. Pipes settling. The clock ticks.","initial");
 });
 
-/* ============================ INITIAL RENDER ============================ */
 renderJournal();
-camera.position.set(state.playerPos.x,1.6,state.playerPos.z);
-camera.rotation.order='YXZ';
+spawnEdgeFigure();
+camera.position.set(state.playerPos.x, 1.6, state.playerPos.z);
+camera.rotation.order = 'YXZ';
 camera.rotation.y = state.yaw;
 
-/* ============================ HEARTBEAT (subtle late loop) ============================ */
-let heartbeatTimer=setInterval(()=>{
-  if(!state.running||state.paused||state.muted||!audio.ctx) return;
-  if(state.loop<5) return;
+/* heartbeat late loop */
+let heartbeatTimer = setInterval(()=>{
+  if(!state.running || state.paused || state.muted || !audio.ctx) return;
+  if(state.loop < 5) return;
   const t = audio.ctx.currentTime;
   const o = audio.ctx.createOscillator(); o.type='sine'; o.frequency.value=50;
   const g = audio.ctx.createGain(); g.gain.setValueAtTime(0,t);
-  g.gain.linearRampToValueAtTime(0.05,t+0.05);
-  g.gain.exponentialRampToValueAtTime(0.0001,t+0.4);
+  g.gain.linearRampToValueAtTime(0.05,t+0.05); g.gain.exponentialRampToValueAtTime(0.0001,t+0.4);
   o.connect(g).connect(audio.master); o.start(t); o.stop(t+0.45);
 }, 2400);
 
